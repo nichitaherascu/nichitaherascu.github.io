@@ -166,6 +166,114 @@ opacity: 0.8;
 }
 
 /* ────────────────────────────────────────
+ Resume
+──────────────────────────────────────── */
+.resume-inner {
+max-width: 560px;
+display: flex;
+flex-direction: column;
+gap: 3rem;
+}
+
+.resume-identity {
+display: flex;
+flex-direction: column;
+gap: 0.3rem;
+padding-bottom: 0.5rem;
+}
+
+.resume-name {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 0.4rem;
+}
+
+.resume-bio {
+font-size: 18px;
+font-weight: 400;
+color: #555;
+line-height: 1.6;
+}
+
+.resume-block {
+display: flex;
+flex-direction: column;
+gap: 0.9rem;
+}
+
+.resume-heading {
+font-size: 18px;
+font-weight: 700;
+padding-bottom: 0.6rem;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.resume-entry {
+display: grid;
+grid-template-columns: 90px 1fr;
+gap: 1.5rem;
+line-height: 1.6;
+}
+
+.resume-year {
+font-size: 18px;
+color: #aaa;
+font-weight: 400;
+padding-top: 0.05rem;
+}
+
+.resume-detail {
+font-size: 18px;
+font-weight: 400;
+line-height: 1.6;
+}
+
+.resume-link {
+color: #000;
+text-decoration: none;
+border-bottom: 1px solid #000;
+}
+
+.resume-link:hover { opacity: 0.5; }
+
+/* ────────────────────────────────────────
+ Text Page
+──────────────────────────────────────── */
+.text-inner {
+max-width: 560px;
+line-height: 1.9;
+font-weight: 400;
+font-size: 18px;
+}
+
+.text-inner p { margin-bottom: 1.5rem; }
+
+.text-inner h2 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 0.5rem;
+margin-top: 2rem;
+}
+
+/* ────────────────────────────────────────
+ Contact
+──────────────────────────────────────── */
+.contact-inner {
+display: flex;
+align-items: flex-start;
+}
+
+.contact-link {
+color: #000;
+border-bottom: 1px solid #000;
+text-decoration: none;
+font-weight: 400;
+font-size: 18px;
+}
+
+.contact-link:hover { opacity: 0.5; }
+
+/* ────────────────────────────────────────
  Lightbox — controlled by script.js
 ──────────────────────────────────────── */
 #lightbox {
@@ -246,38 +354,6 @@ transition: color 0.2s ease;
 .lightbox-close:hover { color: #fff; }
 
 /* ────────────────────────────────────────
- Text Page
-──────────────────────────────────────── */
-.text-inner {
-max-width: 560px;
-line-height: 1.9;
-font-weight: 400;
-font-size: 18px;
-}
-
-.text-inner p { margin-bottom: 1.5rem; }
-
-.text-inner h2 {
-font-size: 18px;
-font-weight: 700;
-margin-bottom: 0.5rem;
-margin-top: 2rem;
-}
-
-/* ────────────────────────────────────────
- Contact
-──────────────────────────────────────── */
-.contact-link {
-color: #000;
-border-bottom: 1px solid #000;
-text-decoration: none;
-font-weight: 400;
-font-size: 18px;
-}
-
-.contact-link:hover { opacity: 0.5; }
-
-/* ────────────────────────────────────────
  Responsive — tablet / small screens
 ──────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -287,17 +363,9 @@ aside {
   padding: 1.6rem;
 }
 
-.name {
-  font-size: 15px;
-}
-
-nav a {
-  font-size: 14px;
-}
-
-.sidebar-bottom {
-  font-size: 9px;
-}
+.name { font-size: 15px; }
+nav a { font-size: 14px; }
+.sidebar-bottom { font-size: 9px; }
 
 main {
   margin-left: 192px;
@@ -308,6 +376,11 @@ main {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.resume-entry {
+  grid-template-columns: 70px 1fr;
+  gap: 1rem;
+}
+
 }
 
 /* ────────────────────────────────────────
@@ -315,9 +388,7 @@ main {
 ──────────────────────────────────────── */
 @media (max-width: 560px) {
 
-body {
-  flex-direction: column;
-}
+body { flex-direction: column; }
 
 aside {
   position: relative;
@@ -342,9 +413,7 @@ nav {
   gap: 1.2rem;
 }
 
-.sidebar-bottom {
-  display: none;
-}
+.sidebar-bottom { display: none; }
 
 main {
   margin-left: 0;
@@ -354,5 +423,12 @@ main {
 .paintings-grid {
   grid-template-columns: repeat(2, 1fr);
 }
+
+.resume-entry {
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+}
+
+.resume-year { font-size: 14px; }
 
 }
