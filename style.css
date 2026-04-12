@@ -5,18 +5,36 @@
 }
 
 body {
-  background: #fff;
-  color: #000;
   font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fff;
+  color: #000;
 }
 
-h1 {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.name {
   font-size: 12px;
-  font-weight: normal;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+nav a {
+  font-size: 12px;
+  color: #000;
+  text-decoration: none;
+}
+
+nav a:hover {
+  opacity: 0.5;
 }
