@@ -18,7 +18,55 @@ display: flex;
 min-height: 100vh;
 }
 
-/* ── Left Sidebar ── */
+/* ────────────────────────────────────────
+ Loader
+──────────────────────────────────────── */
+#loader {
+position: fixed;
+inset: 0;
+background: #fff;
+z-index: 999;
+display: flex;
+align-items: center;
+justify-content: center;
+pointer-events: none;
+}
+
+.loader-text-wrap {
+position: relative;
+display: inline-block;
+}
+
+.loader-name-bg {
+font-family: 'DM Sans', system-ui, sans-serif;
+font-size: 36px;
+font-weight: 700;
+color: #e8e8e8;
+white-space: nowrap;
+display: block;
+}
+
+.loader-name-fill {
+position: absolute;
+top: 0;
+left: 0;
+width: 0%;
+overflow: hidden;
+white-space: nowrap;
+}
+
+.loader-name-fill span {
+font-family: 'DM Sans', system-ui, sans-serif;
+font-size: 36px;
+font-weight: 700;
+color: #000;
+white-space: nowrap;
+display: block;
+}
+
+/* ────────────────────────────────────────
+ Left Sidebar
+──────────────────────────────────────── */
 aside {
 position: fixed;
 top: 0;
@@ -64,12 +112,14 @@ nav a:hover  { opacity: 0.5; }
 nav a.active { opacity: 0.5; }
 
 .sidebar-bottom {
-font-size: 18px;
+font-size: 11px;
 font-weight: 400;
 color: #aaa;
 }
 
-/* ── Right Content ── */
+/* ────────────────────────────────────────
+ Right Content
+──────────────────────────────────────── */
 main {
 margin-left: 240px;
 flex: 1;
@@ -78,13 +128,17 @@ min-height: 100vh;
 overflow-y: auto;
 }
 
-/* ── Sections — visibility controlled by script.js ── */
+/* ────────────────────────────────────────
+ Sections — controlled by script.js
+──────────────────────────────────────── */
 .section {
 display: none;
 opacity: 0;
 }
 
-/* ── Paintings Grid ── */
+/* ────────────────────────────────────────
+ Paintings Grid
+──────────────────────────────────────── */
 .paintings-grid {
 display: grid;
 grid-template-columns: repeat(3, 1fr);
@@ -111,7 +165,9 @@ transition: opacity 0.25s ease;
 opacity: 0.8;
 }
 
-/* ── Lightbox — visibility controlled by script.js ── */
+/* ────────────────────────────────────────
+ Lightbox — controlled by script.js
+──────────────────────────────────────── */
 #lightbox {
 display: none;
 position: fixed;
@@ -189,7 +245,9 @@ transition: color 0.2s ease;
 
 .lightbox-close:hover { color: #fff; }
 
-/* ── Text Page ── */
+/* ────────────────────────────────────────
+ Text Page
+──────────────────────────────────────── */
 .text-inner {
 max-width: 560px;
 line-height: 1.9;
@@ -206,7 +264,9 @@ margin-bottom: 0.5rem;
 margin-top: 2rem;
 }
 
-/* ── Contact ── */
+/* ────────────────────────────────────────
+ Contact
+──────────────────────────────────────── */
 .contact-link {
 color: #000;
 border-bottom: 1px solid #000;
@@ -216,3 +276,83 @@ font-size: 18px;
 }
 
 .contact-link:hover { opacity: 0.5; }
+
+/* ────────────────────────────────────────
+ Responsive — tablet / small screens
+──────────────────────────────────────── */
+@media (max-width: 900px) {
+
+aside {
+  width: 192px;
+  padding: 1.6rem;
+}
+
+.name {
+  font-size: 15px;
+}
+
+nav a {
+  font-size: 14px;
+}
+
+.sidebar-bottom {
+  font-size: 9px;
+}
+
+main {
+  margin-left: 192px;
+  padding: 3rem 2rem;
+}
+
+.paintings-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+}
+
+/* ────────────────────────────────────────
+ Responsive — mobile
+──────────────────────────────────────── */
+@media (max-width: 560px) {
+
+body {
+  flex-direction: column;
+}
+
+aside {
+  position: relative;
+  width: 100%;
+  height: auto;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-right: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-top {
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+nav {
+  flex-direction: row;
+  gap: 1.2rem;
+}
+
+.sidebar-bottom {
+  display: none;
+}
+
+main {
+  margin-left: 0;
+  padding: 2rem 1.5rem;
+}
+
+.paintings-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+}

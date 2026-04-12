@@ -1,30 +1,52 @@
 (function () {
 
 /* ─────────────────────────────────────────
-   Utility: animate a single CSS property
-   using requestAnimationFrame so transitions
-   fire reliably after display changes.
+   Utility: double-rAF animate
 ───────────────────────────────────────── */
 function animate(el, fromProps, toProps, duration, callback) {
   Object.assign(el.style, fromProps);
   el.style.transition = '';
-
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
-      el.style.transition = buildTransition(toProps, duration);
+      el.style.transition = Object.keys(toProps)
+        .map(function (p) { return p + ' ' + duration + 'ms ease'; })
+        .join(', ');
       Object.assign(el.style, toProps);
-      if (callback) {
-        setTimeout(callback, duration);
-      }
+      if (callback) setTimeout(callback, duration);
     });
   });
 }
 
-function buildTransition(props, duration) {
-  return Object.keys(props)
-    .map(function (p) { return p + ' ' + duration + 'ms ease'; })
-    .join(', ');
-}
+
+/* ─────────────────────────────────────────
+   Loader
+   – fills the name left→right over 1.4s
+   – fades the overlay out once done
+───────────────────────────────────────── */
+var loader     = document.getElementById('loader');
+var loaderFill = document.querySelector('.loader-name-fill');
+
+window.addEventListener('load', function () {
+
+  // Trigger the text fill
+  setTimeout(function () {
+    loaderFill.style.transition = 'width 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    loaderFill.style.width = '100%';
+  }, 150);
+
+  // Fade out loader after fill finishes
+  setTimeout(function () {
+    animate(loader,
+      { opacity: '1' },
+      { opacity: '0' },
+      600,
+      function () {
+        loader.style.display = 'none';
+      }
+    );
+  }, 1800);
+
+});
 
 
 /* ─────────────────────────────────────────
@@ -40,12 +62,10 @@ function showSection(targetId) {
   var next = document.getElementById(targetId);
   if (!next || (current && current.id === targetId)) return;
 
-  // Update nav active state
   navLinks.forEach(function (l) { l.classList.remove('active'); });
   var activeLink = document.querySelector('nav a[data-target="' + targetId + '"]');
   if (activeLink) activeLink.classList.add('active');
 
-  // First load — just show the section
   if (!current) {
     next.style.display = 'block';
     animate(next,
@@ -59,7 +79,6 @@ function showSection(targetId) {
 
   busy = true;
 
-  // Fade out current
   animate(current,
     { opacity: '1', transform: 'translateY(0)' },
     { opacity: '0', transform: 'translateY(-8px)' },
@@ -67,19 +86,14 @@ function showSection(targetId) {
     function () {
       current.style.display = 'none';
       current.style.transition = '';
-
-      // Smooth scroll to top of main panel
       mainEl.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Fade in next
       next.style.display = 'block';
       animate(next,
         { opacity: '0', transform: 'translateY(12px)' },
         { opacity: '1', transform: 'translateY(0)' },
         380,
-        function () {
-          busy = false;
-        }
+        function () { busy = false; }
       );
       current = next;
     }
@@ -92,12 +106,11 @@ navLinks.forEach(function (link) {
   });
 });
 
-// Show default section on load
 showSection('paintings');
 
 
 /* ─────────────────────────────────────────
-   Lightbox — fade + scale on open/close
+   Lightbox — fade + scale on open / close
 ───────────────────────────────────────── */
 var lightbox       = document.getElementById('lightbox');
 var lightboxInner  = lightbox.querySelector('.lightbox-inner');
@@ -111,24 +124,22 @@ function openLightbox(imgEl, title, year, medium) {
   if (lightboxIsOpen) return;
   lightboxIsOpen = true;
 
-  // Populate content
   lightboxImg.src            = imgEl.src;
   lightboxTitle.textContent  = title;
   lightboxYear.textContent   = year;
   lightboxMedium.textContent = medium;
 
-  // Show overlay, start transparent
   lightbox.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
-  // 1. Fade in the dark overlay
+  // Overlay fades in
   animate(lightbox,
     { opacity: '0' },
     { opacity: '1' },
     280
   );
 
-  // 2. Scale + fade in the inner content, slightly delayed
+  // Content scales in, slightly after overlay
   setTimeout(function () {
     animate(lightboxInner,
       { opacity: '0', transform: 'scale(0.96)' },
@@ -141,14 +152,12 @@ function openLightbox(imgEl, title, year, medium) {
 function closeLightbox() {
   if (!lightboxIsOpen) return;
 
-  // 1. Fade out inner content first
   animate(lightboxInner,
     { opacity: '1', transform: 'scale(1)' },
     { opacity: '0', transform: 'scale(0.96)' },
     200
   );
 
-  // 2. Fade out overlay
   setTimeout(function () {
     animate(lightbox,
       { opacity: '1' },
@@ -165,7 +174,6 @@ function closeLightbox() {
   }, 120);
 }
 
-// Open on painting click
 document.querySelectorAll('.painting-item').forEach(function (item) {
   item.addEventListener('click', function () {
     openLightbox(
@@ -177,7 +185,6 @@ document.querySelectorAll('.painting-item').forEach(function (item) {
   });
 });
 
-// Close triggers
 document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
 
 lightbox.addEventListener('click', function (e) {
