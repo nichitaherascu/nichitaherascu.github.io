@@ -4,6 +4,10 @@ margin: 0;
 padding: 0;
 }
 
+html {
+scroll-behavior: smooth;
+}
+
 body {
 background: #fff;
 color: #000;
@@ -56,7 +60,7 @@ transition: opacity 0.2s;
 cursor: pointer;
 }
 
-nav a:hover { opacity: 0.5; }
+nav a:hover  { opacity: 0.5; }
 nav a.active { opacity: 0.5; }
 
 .sidebar-bottom {
@@ -71,11 +75,34 @@ margin-left: 240px;
 flex: 1;
 padding: 4rem 3rem;
 min-height: 100vh;
+overflow-y: auto;
 }
 
-/* ── Sections ── */
-.section { display: none; }
-.section.active { display: block; }
+/* ── Section fade transitions ── */
+.section {
+display: none;
+opacity: 0;
+}
+
+.section.active {
+display: block;
+animation: sectionFadeIn 0.4s ease forwards;
+}
+
+.section.fade-out {
+animation: sectionFadeOut 0.25s ease forwards;
+display: block;
+}
+
+@keyframes sectionFadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes sectionFadeOut {
+from { opacity: 1; transform: translateY(0);    }
+to   { opacity: 0; transform: translateY(-6px); }
+}
 
 /* ── Paintings Grid ── */
 .paintings-grid {
@@ -118,6 +145,22 @@ padding: 3rem;
 
 #lightbox.open {
 display: flex;
+animation: lightboxFadeIn 0.3s ease forwards;
+}
+
+#lightbox.closing {
+animation: lightboxFadeOut 0.3s ease forwards;
+display: flex;
+}
+
+@keyframes lightboxFadeIn {
+from { opacity: 0; }
+to   { opacity: 1; }
+}
+
+@keyframes lightboxFadeOut {
+from { opacity: 1; }
+to   { opacity: 0; }
 }
 
 .lightbox-inner {
@@ -127,6 +170,15 @@ gap: 2.5rem;
 max-width: 900px;
 max-height: 90vh;
 width: 100%;
+}
+
+#lightbox.open .lightbox-inner {
+animation: lightboxContentIn 0.4s ease forwards;
+}
+
+@keyframes lightboxContentIn {
+from { opacity: 0; transform: scale(0.97); }
+to   { opacity: 1; transform: scale(1);    }
 }
 
 .lightbox-img-wrap {
