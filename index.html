@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Nichita Herascu</title>
 
-<!-- White blank favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/></svg>">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
@@ -25,65 +23,57 @@
   </div>
 </div>
 
+<!-- ── Sidebar ── -->
 <aside>
   <div class="sidebar-top">
     <span class="name">Nichita Herascu</span>
     <nav>
-      <a data-target="paintings">Paintings</a>
-      <a data-target="resume">Resume</a>
-      <a data-target="text">Text</a>
-      <a data-target="contact">Contact</a>
+      <a data-target="paintings" data-i18n="nav-paintings">Paintings</a>
+      <a data-target="resume"    data-i18n="nav-resume">Resume</a>
+      <a data-target="text"      data-i18n="nav-text">Text</a>
+      <a data-target="contact"   data-i18n="nav-contact">Contact</a>
     </nav>
   </div>
-  <div class="sidebar-bottom">Nichita Herascu 2026</div>
+  <div class="sidebar-bottom-wrap">
+    <div class="lang-toggle">
+      <span class="lang-btn active" data-lang="en">EN</span>
+      <span class="lang-sep">/</span>
+      <span class="lang-btn" data-lang="de">DE</span>
+    </div>
+    <div class="sidebar-bottom">Nichita Herascu 2026</div>
+  </div>
 </aside>
 
+<!-- ── Main ── -->
 <main>
 
   <!-- Paintings -->
   <div id="paintings" class="section">
     <div class="paintings-grid">
-
-      <div class="painting-item"
-        data-title="Untitled I" data-year="2024" data-medium="Oil on canvas">
+      <div class="painting-item" data-title="Untitled I" data-year="2024" data-medium="Oil on canvas">
         <img src="images/painting-1.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Figure Study II" data-year="2024" data-medium="Acrylic on linen">
+      <div class="painting-item" data-title="Figure Study II" data-year="2024" data-medium="Acrylic on linen">
         <img src="images/painting-2.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Still Life with Vessels" data-year="2023" data-medium="Oil on canvas">
+      <div class="painting-item" data-title="Still Life with Vessels" data-year="2023" data-medium="Oil on canvas">
         <img src="images/painting-3.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Horizon" data-year="2023" data-medium="Oil on panel">
+      <div class="painting-item" data-title="Horizon" data-year="2023" data-medium="Oil on panel">
         <img src="images/painting-4.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Portrait Study" data-year="2023" data-medium="Oil on canvas">
+      <div class="painting-item" data-title="Portrait Study" data-year="2023" data-medium="Oil on canvas">
         <img src="images/painting-5.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Reflection III" data-year="2022" data-medium="Acrylic on canvas">
+      <div class="painting-item" data-title="Reflection III" data-year="2022" data-medium="Acrylic on canvas">
         <img src="images/painting-6.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Interior" data-year="2022" data-medium="Oil on canvas">
+      <div class="painting-item" data-title="Interior" data-year="2022" data-medium="Oil on canvas">
         <img src="images/painting-7.jpg" alt="" />
       </div>
-
-      <div class="painting-item"
-        data-title="Forest" data-year="2021" data-medium="Oil on linen">
+      <div class="painting-item" data-title="Forest" data-year="2021" data-medium="Oil on linen">
         <img src="images/painting-8.jpg" alt="" />
       </div>
-
     </div>
   </div>
 
@@ -91,56 +81,52 @@
   <div id="resume" class="section">
     <div class="resume-inner">
 
-      <!-- Identity -->
       <div class="resume-identity">
         <p class="resume-name">Nichita Herascu</p>
-        <p class="resume-bio">Born in 2000 in Bucharest, Romania.</p>
-        <p class="resume-bio">Resides and works in Bucharest, Romania.</p>
+        <p class="resume-bio" data-i18n="resume-bio-1">Born in 2000 in Bucharest, Romania.</p>
+        <p class="resume-bio" data-i18n="resume-bio-2">Resides and works in Bucharest, Romania.</p>
       </div>
 
-      <!-- Education -->
       <div class="resume-block">
-        <h2 class="resume-heading">Education</h2>
+        <h2 class="resume-heading" data-i18n="resume-heading-education">Education</h2>
         <div class="resume-entry">
           <span class="resume-year">2021 – 2022</span>
-          <span class="resume-detail">Photography and Videography, University of Arts Bucharest, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n="resume-edu-1">Photography and Videography, University of Arts Bucharest, Bucharest, Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year">2019 – 2020</span>
-          <span class="resume-detail">Advanced Graphic Design, Pixellab, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n="resume-edu-2">Advanced Graphic Design, Pixellab, Bucharest, Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year">2015 – 2019</span>
-          <span class="resume-detail">Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n="resume-edu-3">Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania</span>
         </div>
       </div>
 
-      <!-- Selected Exhibitions -->
       <div class="resume-block">
-        <h2 class="resume-heading">Selected Exhibitions</h2>
+        <h2 class="resume-heading" data-i18n="resume-heading-exhibitions">Selected Exhibitions</h2>
         <div class="resume-entry">
           <span class="resume-year">2019</span>
-          <span class="resume-detail"><em>Extravaganzza</em>, group exhibition, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n-html="resume-ex-1"><em>Extravaganzza</em>, group exhibition, Bucharest, Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year">2019</span>
-          <span class="resume-detail"><em>Tête-à-Tête 3</em>, group exhibition, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n-html="resume-ex-2"><em>Tête-à-Tête 3</em>, group exhibition, Bucharest, Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year">2018</span>
-          <span class="resume-detail"><em>MNAC</em>, group exhibition, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n-html="resume-ex-3"><em>MNAC</em>, group exhibition, Bucharest, Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year">2017</span>
-          <span class="resume-detail"><em>Tête-à-Tête 2</em>, Artmark, group exhibition, Bucharest, Romania</span>
+          <span class="resume-detail" data-i18n-html="resume-ex-4"><em>Tête-à-Tête 2</em>, Artmark, group exhibition, Bucharest, Romania</span>
         </div>
       </div>
 
-      <!-- Contact Details -->
       <div class="resume-block">
-        <h2 class="resume-heading">Contact</h2>
+        <h2 class="resume-heading" data-i18n="resume-heading-contact">Contact</h2>
         <div class="resume-entry">
-          <span class="resume-year">Studio</span>
+          <span class="resume-year" data-i18n="resume-studio-label">Studio</span>
           <span class="resume-detail">
             Str. Emil Racovita 22A<br />
             041761<br />
@@ -148,7 +134,7 @@
           </span>
         </div>
         <div class="resume-entry">
-          <span class="resume-year">Email</span>
+          <span class="resume-year" data-i18n="resume-email-label">Email</span>
           <span class="resume-detail">
             <a href="mailto:nichitaherascu@gmail.com" class="resume-link">nichitaherascu@gmail.com</a>
           </span>
@@ -161,13 +147,13 @@
   <!-- Text -->
   <div id="text" class="section">
     <div class="text-inner">
-      <p>Painting is a way of thinking with the hand. Each work begins not with an image in mind but with a surface and a question — what remains when everything unnecessary is removed.</p>
-      <h2>Process</h2>
-      <p>The works are built in layers, slowly. Oil on canvas or linen, sometimes panel. Colour is arrived at through mixing and erasure rather than selection. A painting is finished when it starts to resist further change.</p>
-      <h2>Place</h2>
-      <p>Much of the work is rooted in landscape — not as subject but as condition. The flatness of the east, the grey weight of winter light, the particular silence of fields at the edge of a town.</p>
-      <h2>Biography</h2>
-      <p>Nichita Herascu is a painter based in Europe. He studied fine art and has exhibited work internationally. He is currently working on a new body of work.</p>
+      <p data-i18n="text-intro">Painting is a way of thinking with the hand. Each work begins not with an image in mind but with a surface and a question — what remains when everything unnecessary is removed.</p>
+      <h2 data-i18n="text-heading-process">Process</h2>
+      <p data-i18n="text-process">The works are built in layers, slowly. Oil on canvas or linen, sometimes panel. Colour is arrived at through mixing and erasure rather than selection. A painting is finished when it starts to resist further change.</p>
+      <h2 data-i18n="text-heading-place">Place</h2>
+      <p data-i18n="text-place">Much of the work is rooted in landscape — not as subject but as condition. The flatness of the east, the grey weight of winter light, the particular silence of fields at the edge of a town.</p>
+      <h2 data-i18n="text-heading-biography">Biography</h2>
+      <p data-i18n="text-biography">Nichita Herascu is a painter based in Europe. He studied fine art and has exhibited work internationally. He is currently working on a new body of work.</p>
     </div>
   </div>
 
@@ -180,7 +166,19 @@
 
 </main>
 
-<!-- Lightbox -->
+<!-- ── Clocks ── -->
+<div id="clocks">
+  <div class="clock" id="clock-local">
+    <div class="clock-time" id="time-local">00:00:00</div>
+    <div class="clock-label" id="label-local">—</div>
+  </div>
+  <div class="clock" id="clock-romania">
+    <div class="clock-time" id="time-romania">00:00:00</div>
+    <div class="clock-label" data-i18n="clock-bucharest">Bucharest</div>
+  </div>
+</div>
+
+<!-- ── Lightbox ── -->
 <div id="lightbox">
   <button class="lightbox-close" id="lightbox-close">✕</button>
   <div class="lightbox-inner">
