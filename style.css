@@ -56,7 +56,7 @@ color: #000;
 text-decoration: none;
 font-size: 18px;
 font-weight: 400;
-transition: opacity 0.2s;
+transition: opacity 0.2s ease;
 cursor: pointer;
 }
 
@@ -78,30 +78,10 @@ min-height: 100vh;
 overflow-y: auto;
 }
 
-/* ── Section fade transitions ── */
+/* ── Sections — visibility controlled by script.js ── */
 .section {
 display: none;
 opacity: 0;
-}
-
-.section.active {
-display: block;
-animation: sectionFadeIn 0.4s ease forwards;
-}
-
-.section.fade-out {
-animation: sectionFadeOut 0.25s ease forwards;
-display: block;
-}
-
-@keyframes sectionFadeIn {
-from { opacity: 0; transform: translateY(10px); }
-to   { opacity: 1; transform: translateY(0);    }
-}
-
-@keyframes sectionFadeOut {
-from { opacity: 1; transform: translateY(0);    }
-to   { opacity: 0; transform: translateY(-6px); }
 }
 
 /* ── Paintings Grid ── */
@@ -131,7 +111,7 @@ transition: opacity 0.25s ease;
 opacity: 0.8;
 }
 
-/* ── Lightbox ── */
+/* ── Lightbox — visibility controlled by script.js ── */
 #lightbox {
 display: none;
 position: fixed;
@@ -141,26 +121,7 @@ z-index: 100;
 align-items: center;
 justify-content: center;
 padding: 3rem;
-}
-
-#lightbox.open {
-display: flex;
-animation: lightboxFadeIn 0.3s ease forwards;
-}
-
-#lightbox.closing {
-animation: lightboxFadeOut 0.3s ease forwards;
-display: flex;
-}
-
-@keyframes lightboxFadeIn {
-from { opacity: 0; }
-to   { opacity: 1; }
-}
-
-@keyframes lightboxFadeOut {
-from { opacity: 1; }
-to   { opacity: 0; }
+opacity: 0;
 }
 
 .lightbox-inner {
@@ -170,15 +131,8 @@ gap: 2.5rem;
 max-width: 900px;
 max-height: 90vh;
 width: 100%;
-}
-
-#lightbox.open .lightbox-inner {
-animation: lightboxContentIn 0.4s ease forwards;
-}
-
-@keyframes lightboxContentIn {
-from { opacity: 0; transform: scale(0.97); }
-to   { opacity: 1; transform: scale(1);    }
+opacity: 0;
+transform: scale(0.96);
 }
 
 .lightbox-img-wrap {
@@ -230,7 +184,7 @@ font-size: 24px;
 cursor: pointer;
 font-family: 'DM Sans', sans-serif;
 line-height: 1;
-transition: color 0.2s;
+transition: color 0.2s ease;
 }
 
 .lightbox-close:hover { color: #fff; }

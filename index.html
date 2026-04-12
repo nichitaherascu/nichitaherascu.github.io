@@ -26,7 +26,7 @@
 <main>
 
   <!-- Paintings -->
-  <div id="paintings" class="section active">
+  <div id="paintings" class="section">
     <div class="paintings-grid">
 
       <div class="painting-item"
@@ -103,89 +103,14 @@
       <img id="lightbox-img" src="" alt="" />
     </div>
     <div class="lightbox-meta">
-      <div class="meta-title" id="lightbox-title"></div>
-      <div class="meta-year" id="lightbox-year"></div>
+      <div class="meta-title"  id="lightbox-title"></div>
+      <div class="meta-year"   id="lightbox-year"></div>
       <div class="meta-medium" id="lightbox-medium"></div>
     </div>
   </div>
 </div>
 
-<script>
-  /* ── Navigation with fade ── */
-  const navLinks = document.querySelectorAll('nav a[data-target]');
-  const sections = document.querySelectorAll('.section');
-
-  function showSection(targetId) {
-    var current = document.querySelector('.section.active');
-
-    navLinks.forEach(function(l) { l.classList.remove('active'); });
-    var targetLink = document.querySelector('nav a[data-target="' + targetId + '"]');
-    if (targetLink) targetLink.classList.add('active');
-
-    if (current && current.id !== targetId) {
-      current.classList.add('fade-out');
-      setTimeout(function() {
-        current.classList.remove('active', 'fade-out');
-        var next = document.getElementById(targetId);
-        if (next) {
-          next.classList.add('active');
-          main.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 250);
-    } else if (!current) {
-      var next = document.getElementById(targetId);
-      if (next) next.classList.add('active');
-    }
-  }
-
-  var main = document.querySelector('main');
-
-  navLinks.forEach(function(link) {
-    link.addEventListener('click', function() {
-      showSection(this.getAttribute('data-target'));
-    });
-  });
-
-  showSection('paintings');
-
-  /* ── Lightbox with fade ── */
-  var lightbox       = document.getElementById('lightbox');
-  var lightboxImg    = document.getElementById('lightbox-img');
-  var lightboxTitle  = document.getElementById('lightbox-title');
-  var lightboxYear   = document.getElementById('lightbox-year');
-  var lightboxMedium = document.getElementById('lightbox-medium');
-
-  document.querySelectorAll('.painting-item').forEach(function(item) {
-    item.addEventListener('click', function() {
-      var img = item.querySelector('img');
-      lightboxImg.src = img.src;
-      lightboxTitle.textContent  = item.getAttribute('data-title');
-      lightboxYear.textContent   = item.getAttribute('data-year');
-      lightboxMedium.textContent = item.getAttribute('data-medium');
-      lightbox.classList.remove('closing');
-      lightbox.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  function closeLightbox() {
-    lightbox.classList.add('closing');
-    setTimeout(function() {
-      lightbox.classList.remove('open', 'closing');
-      document.body.style.overflow = '';
-    }, 300);
-  }
-
-  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-
-  lightbox.addEventListener('click', function(e) {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
-</script>
+<script src="script.js" defer></script>
 
 </body>
 </html>
