@@ -183,7 +183,7 @@ padding-bottom: 0.5rem;
 }
 
 .resume-name {
-font-size: 18px;
+font-size: 19px;
 font-weight: 700;
 margin-bottom: 0.4rem;
 }
@@ -202,7 +202,7 @@ gap: 0.9rem;
 }
 
 .resume-heading {
-font-size: 18px;
+font-size: 19px; /* matches .name */
 font-weight: 700;
 padding-bottom: 0.6rem;
 border-bottom: 1px solid #e0e0e0;
@@ -249,7 +249,7 @@ font-size: 18px;
 .text-inner p { margin-bottom: 1.5rem; }
 
 .text-inner h2 {
-font-size: 18px;
+font-size: 19px; /* matches .name */
 font-weight: 700;
 margin-bottom: 0.5rem;
 margin-top: 2rem;
@@ -366,6 +366,9 @@ aside {
 .name { font-size: 15px; }
 nav a { font-size: 14px; }
 .sidebar-bottom { font-size: 9px; }
+
+.resume-heading { font-size: 15px; }
+.text-inner h2  { font-size: 15px; }
 
 main {
   margin-left: 192px;
