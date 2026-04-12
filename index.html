@@ -1,12 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html data-type="html" data-identifier="7a93dc8a-9007-4abe-952b-58c08ab01050" data-title="Nichita Herascu — Portfolio" data-version="1" width="1200" height="900"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nichita Herascu</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #fff;
+      color: #000;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 12px;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .name { font-size: 12px; }
+    nav { display: flex; gap: 2rem; }
+    nav a {
+      color: #000;
+      text-decoration: none;
+      font-size: 12px;
+      transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.5; }
+
+    /* ── Sections ── */
+    section { padding: 4rem 2rem; }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+    }
+
+    /* ── Work grid ── */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .work-item { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .work-item img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      display: block;
+      background: #f5f5f5;
+    }
+
+    .work-meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .work-title { font-size: 12px; }
+    .work-year { font-size: 12px; color: #aaa; }
+    .work-medium { font-size: 12px; color: #aaa; margin-top: 0.15rem; }
+
+    /* ── Contact ── */
+    #contact { border-top: 1px solid #e0e0e0; }
+    .contact-inner { max-width: 400px; }
+    .contact-inner p { line-height: 1.8; margin-bottom: 1.5rem; }
+    .contact-inner a { color: #000; text-decoration: none; border-bottom: 1px solid #000; }
+    .contact-inner a:hover { opacity: 0.5; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 2rem;
+      border-top: 1px solid #e0e0e0;
+      color: #aaa;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
+
   <header>
     <span class="name">Nichita Herascu</span>
     <nav>
@@ -14,5 +88,79 @@
       <a href="#contact">Contact</a>
     </nav>
   </header>
-</body>
-</html>
+
+  <!-- ── Work ── -->
+  <section id="work">
+    <p class="section-label">Work</p>
+    <div class="work-grid">
+
+      <div class="work-item">
+        <img data-src="An oil painting of a misty Eastern European landscape at dawn, muted greens and greys, painterly brushwork, fine art style" alt="Untitled I">
+        <div class="work-meta">
+          <span class="work-title">Untitled I</span>
+          <span class="work-year">2024</span>
+        </div>
+        <div class="work-medium">Oil on canvas</div>
+      </div>
+
+      <div class="work-item">
+        <img data-src="Abstract figurative painting, lone figure in warm ochre and burnt sienna tones, expressive loose brushwork, fine art style" alt="Figure Study II">
+        <div class="work-meta">
+          <span class="work-title">Figure Study II</span>
+          <span class="work-year">2024</span>
+        </div>
+        <div class="work-medium">Acrylic on linen</div>
+      </div>
+
+      <div class="work-item">
+        <img data-src="Still life painting with ceramic vessels and dried flowers, cool blue and grey palette, soft diffused light, fine art style" alt="Still Life with Vessels">
+        <div class="work-meta">
+          <span class="work-title">Still Life with Vessels</span>
+          <span class="work-year">2023</span>
+        </div>
+        <div class="work-medium">Oil on canvas</div>
+      </div>
+
+      <div class="work-item">
+        <img data-src="Landscape painting of flat open fields under an overcast sky, minimal horizon, muted greens and slate grey, fine art style" alt="Horizon">
+        <div class="work-meta">
+          <span class="work-title">Horizon</span>
+          <span class="work-year">2023</span>
+        </div>
+        <div class="work-medium">Oil on panel</div>
+      </div>
+
+      <div class="work-item">
+        <img data-src="Portrait painting, young woman looking away, warm terracotta skin tones against a soft grey ground, loose expressive marks, fine art style" alt="Portrait Study">
+        <div class="work-meta">
+          <span class="work-title">Portrait Study</span>
+          <span class="work-year">2023</span>
+        </div>
+        <div class="work-medium">Oil on canvas</div>
+      </div>
+
+      <div class="work-item">
+        <img data-src="Abstract painting of water reflections, layered transparent glazes, deep blues and blacks with white highlights, fine art style" alt="Reflection III">
+        <div class="work-meta">
+          <span class="work-title">Reflection III</span>
+          <span class="work-year">2022</span>
+        </div>
+        <div class="work-medium">Acrylic on canvas</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <p class="section-label">Contact</p>
+    <div class="contact-inner">
+      <p>For inquiries about available works, commissions, or exhibitions, feel free to get in touch.</p>
+      <a href="mailto:hello@nichitaherascu.com">hello@nichitaherascu.com</a>
+    </div>
+  </section>
+
+  <footer>© 2026 Nichita Herascu</footer>
+
+
+</body></html>
