@@ -70,7 +70,6 @@ var i18n = {
     'text-place':                 'Much of the work is rooted in landscape — not as subject but as condition. The flatness of the east, the grey weight of winter light, the particular silence of fields at the edge of a town.',
     'text-heading-biography':     'Biography',
     'text-biography':             'Nichita Herascu is a painter based in Europe. He studied fine art and has exhibited work internationally. He is currently working on a new body of work.',
-    'clock-bucharest':            'Bucharest',
   },
   de: {
     'nav-paintings':              'Gemälde',
@@ -98,7 +97,6 @@ var i18n = {
     'text-place':                 'Ein Großteil der Arbeit wurzelt in der Landschaft – nicht als Motiv, sondern als Zustand. Die Weite des Ostens, das graue Gewicht des Winterlichts, die besondere Stille der Felder am Rand einer Stadt.',
     'text-heading-biography':     'Biografie',
     'text-biography':             'Nichita Herascu ist ein in Europa lebender Maler. Er hat Bildende Kunst studiert und seine Werke international ausgestellt. Derzeit arbeitet er an einem neuen Werkkörper.',
-    'clock-bucharest':            'Bukarest',
   }
 };
 
@@ -251,45 +249,5 @@ lightbox.addEventListener('click', function (e) {
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeLightbox();
 });
-
-
-/* ─────────────────────────────────────────
-   Clocks
-   – Always shows Bucharest time
-   – Shows visitor's local time only if they
-     are outside the Europe/Bucharest timezone
-───────────────────────────────────────── */
-var userTz     = Intl.DateTimeFormat().resolvedOptions().timeZone;
-var isRomania  = userTz === 'Europe/Bucharest';
-var clockLocal = document.getElementById('clock-local');
-var labelLocal = document.getElementById('label-local');
-
-if (isRomania) {
-  clockLocal.style.display = 'none';
-} else {
-  clockLocal.style.display = 'block';
-  var city = userTz.split('/').pop().replace(/_/g, ' ');
-  labelLocal.textContent = city;
-}
-
-function formatTime(tz) {
-  return new Intl.DateTimeFormat('en-GB', {
-    timeZone:  tz,
-    hour:      '2-digit',
-    minute:    '2-digit',
-    second:    '2-digit',
-    hour12:    false
-  }).format(new Date());
-}
-
-function updateClocks() {
-  document.getElementById('time-romania').textContent = formatTime('Europe/Bucharest');
-  if (!isRomania) {
-    document.getElementById('time-local').textContent = formatTime(userTz);
-  }
-}
-
-updateClocks();
-setInterval(updateClocks, 1000);
 
 })();
