@@ -171,25 +171,22 @@ opacity: 0;
 }
 
 /* ────────────────────────────────────────
- Paintings Grid
+ Paintings — Masonry
 ──────────────────────────────────────── */
 .paintings-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 1.5rem;
+columns: 3;
+column-gap: 1.5rem;
 }
 
 .painting-item {
-width: 100%;
+break-inside: avoid;
+margin-bottom: 1.5rem;
 cursor: pointer;
 }
 
 .painting-item img {
 width: 100%;
 height: auto;
-aspect-ratio: 2 / 3;
-object-fit: cover;
-object-position: center;
 display: block;
 background: #f0f0f0;
 transition: opacity 0.25s ease;
@@ -386,19 +383,20 @@ transition: color 0.2s ease;
 ──────────────────────────────────────── */
 @media (max-width: 900px) {
 
-aside        { width: 192px; padding: 1.6rem; }
-.name        { font-size: 15px; }
-nav a        { font-size: 14px; }
+aside           { width: 192px; padding: 1.6rem; }
+.name           { font-size: 15px; }
+nav a           { font-size: 14px; }
 .lang-btn,
-.lang-sep    { font-size: 14px; }
-.sidebar-bottom  { font-size: 9px; }
-.resume-heading  { font-size: 15px; }
-.text-inner h2   { font-size: 15px; }
+.lang-sep       { font-size: 14px; }
+.sidebar-bottom { font-size: 9px; }
+.resume-heading { font-size: 15px; }
+.text-inner h2  { font-size: 15px; }
 
 main { margin-left: 192px; padding: 3rem 2rem; }
 
-.paintings-grid { grid-template-columns: repeat(2, 1fr); }
-.resume-entry   { grid-template-columns: 70px 1fr; gap: 1rem; }
+.paintings-grid { columns: 2; }
+
+.resume-entry { grid-template-columns: 70px 1fr; gap: 1rem; }
 
 }
 
@@ -433,8 +431,9 @@ nav { flex-direction: row; gap: 1.2rem; }
 
 main { margin-left: 0; padding: 2rem 1.5rem; }
 
-.paintings-grid { grid-template-columns: repeat(2, 1fr); }
-.resume-entry   { grid-template-columns: 1fr; gap: 0.2rem; }
-.resume-year    { font-size: 14px; }
+.paintings-grid { columns: 2; }
+
+.resume-entry { grid-template-columns: 1fr; gap: 0.2rem; }
+.resume-year  { font-size: 14px; }
 
 }
