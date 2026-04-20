@@ -39,6 +39,23 @@ window.addEventListener('load', function () {
 
 
 /* ─────────────────────────────────────────
+   Landing
+   – Sits above the main site (z-index 50)
+   – Click any image → fade out landing,
+     reveal the paintings section beneath
+───────────────────────────────────────── */
+var landing = document.getElementById('landing');
+
+document.querySelectorAll('.landing-img').forEach(function (img) {
+  img.addEventListener('click', function () {
+    animate(landing, { opacity: '1' }, { opacity: '0' }, 500, function () {
+      landing.style.display = 'none';
+    });
+  });
+});
+
+
+/* ─────────────────────────────────────────
    Internationalisation (EN / DE)
 ───────────────────────────────────────── */
 var currentLang = 'en';
@@ -102,17 +119,14 @@ var i18n = {
 
 function applyLanguage(lang) {
   currentLang = lang;
-
   document.querySelectorAll('[data-i18n]').forEach(function (el) {
     var key = el.getAttribute('data-i18n');
     if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
   });
-
   document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
     var key = el.getAttribute('data-i18n-html');
     if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
   });
-
   document.querySelectorAll('.lang-btn').forEach(function (btn) {
     btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
   });
