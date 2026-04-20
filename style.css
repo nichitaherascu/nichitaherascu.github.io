@@ -61,6 +61,48 @@ display: block;
 }
 
 /* ────────────────────────────────────────
+ Landing
+──────────────────────────────────────── */
+#landing {
+position: fixed;
+inset: 0;
+background: #fff;
+z-index: 50;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.landing-grid {
+display: flex;
+flex-direction: row;
+align-items: center;
+gap: 6px;
+}
+
+.landing-img {
+width: 88px;
+height: 88px;
+object-fit: cover;
+object-position: center;
+display: block;
+cursor: pointer;
+background: #f0f0f0;
+transition: opacity 0.25s ease;
+}
+
+.landing-img:hover { opacity: 0.8; }
+
+.landing-copyright {
+position: absolute;
+bottom: 2rem;
+left: 2rem;
+font-size: 11px;
+font-weight: 400;
+color: #aaa;
+}
+
+/* ────────────────────────────────────────
  Left Sidebar
 ──────────────────────────────────────── */
 aside {
@@ -174,7 +216,7 @@ opacity: 0;
  Paintings — Masonry
 ──────────────────────────────────────── */
 .paintings-grid {
-columns: 3;
+columns: 2;
 column-gap: 1.5rem;
 }
 
@@ -394,9 +436,10 @@ nav a           { font-size: 14px; }
 
 main { margin-left: 192px; padding: 3rem 2rem; }
 
-.paintings-grid { columns: 2; }
+.paintings-grid { columns: 1; }
+.resume-entry   { grid-template-columns: 70px 1fr; gap: 1rem; }
 
-.resume-entry { grid-template-columns: 70px 1fr; gap: 1rem; }
+.landing-img    { width: 70px; height: 70px; }
 
 }
 
@@ -431,9 +474,11 @@ nav { flex-direction: row; gap: 1.2rem; }
 
 main { margin-left: 0; padding: 2rem 1.5rem; }
 
-.paintings-grid { columns: 2; }
+.paintings-grid { columns: 1; }
+.resume-entry   { grid-template-columns: 1fr; gap: 0.2rem; }
+.resume-year    { font-size: 14px; }
 
-.resume-entry { grid-template-columns: 1fr; gap: 0.2rem; }
-.resume-year  { font-size: 14px; }
+.landing-grid   { gap: 4px; }
+.landing-img    { width: 52px; height: 52px; }
 
 }
