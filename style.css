@@ -61,55 +61,6 @@ display: block;
 }
 
 /* ────────────────────────────────────────
- Landing
-──────────────────────────────────────── */
-#landing {
-position: fixed;
-inset: 0;
-background: #fff;
-z-index: 50;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.landing-name {
-position: absolute;
-top: 2rem;
-left: 2rem;
-font-size: 19px;
-font-weight: 700;
-}
-
-.landing-grid {
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 6px;
-}
-
-.landing-img {
-width: 88px;
-height: 88px;
-object-fit: cover;
-object-position: center;
-display: block;
-cursor: pointer;
-background: #f0f0f0;
-transform: scale(1);
-transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.landing-copyright {
-position: absolute;
-bottom: 2rem;
-right: 2rem;
-font-size: 11px;
-font-weight: 400;
-color: #aaa;
-}
-
-/* ────────────────────────────────────────
  Left Sidebar
 ──────────────────────────────────────── */
 aside {
@@ -446,9 +397,6 @@ main { margin-left: 192px; padding: 3rem 2rem; }
 .paintings-grid { columns: 1; }
 .resume-entry   { grid-template-columns: 70px 1fr; gap: 1rem; }
 
-.landing-name   { font-size: 15px; }
-.landing-img    { width: 70px; height: 70px; }
-
 }
 
 /* ────────────────────────────────────────
@@ -485,9 +433,5 @@ main { margin-left: 0; padding: 2rem 1.5rem; }
 .paintings-grid { columns: 1; }
 .resume-entry   { grid-template-columns: 1fr; gap: 0.2rem; }
 .resume-year    { font-size: 14px; }
-
-.landing-grid   { gap: 4px; }
-.landing-img    { width: 52px; height: 52px; }
-.landing-name   { font-size: 14px; }
 
 }
