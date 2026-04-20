@@ -40,13 +40,45 @@ window.addEventListener('load', function () {
 
 /* ─────────────────────────────────────────
    Landing
-   – Sits above the main site (z-index 50)
-   – Click any image → fade out landing,
-     reveal the paintings section beneath
+   – Proximity scale: hovered image grows
+     most, neighbours grow proportionally
+     less based on distance
 ───────────────────────────────────────── */
-var landing = document.getElementById('landing');
+var landing     = document.getElementById('landing');
+var landingGrid = document.querySelector('.landing-grid');
+var landingImgs = Array.from(document.querySelectorAll('.landing-img'));
 
-document.querySelectorAll('.landing-img').forEach(function (img) {
+// Scale values by distance from hovered image
+var scaleByDistance = [1.45, 1.22, 1.08, 1.0];
+
+function getScale(distance) {
+  return scaleByDistance[Math.min(distance, scaleByDistance.length - 1)];
+}
+
+function applyProximityScale(hoveredIndex) {
+  landingImgs.forEach(function (img, i) {
+    var distance = Math.abs(i - hoveredIndex);
+    img.style.transform = 'scale(' + getScale(distance) + ')';
+  });
+}
+
+function resetScale() {
+  landingImgs.forEach(function (img) {
+    img.style.transform = 'scale(1)';
+  });
+}
+
+landingImgs.forEach(function (img, index) {
+  img.addEventListener('mouseenter', function () {
+    applyProximityScale(index);
+  });
+});
+
+// Reset only when the mouse fully leaves the grid
+landingGrid.addEventListener('mouseleave', resetScale);
+
+// Click any image → enter the site
+landingImgs.forEach(function (img) {
   img.addEventListener('click', function () {
     animate(landing, { opacity: '1' }, { opacity: '0' }, 500, function () {
       landing.style.display = 'none';
