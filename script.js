@@ -39,6 +39,36 @@ window.addEventListener('load', function () {
 
 
 /* ─────────────────────────────────────────
+   Hamburger menu (mobile)
+───────────────────────────────────────── */
+var asideEl    = document.querySelector('aside');
+var hamburger  = document.getElementById('hamburger');
+var mainEl     = document.querySelector('main');
+
+function setMainPadding() {
+  if (window.innerWidth <= 640) {
+    mainEl.style.paddingTop = (asideEl.offsetHeight + 24) + 'px';
+  } else {
+    mainEl.style.paddingTop = '';
+  }
+}
+
+hamburger.addEventListener('click', function () {
+  asideEl.classList.toggle('menu-open');
+  setTimeout(setMainPadding, 360); // after transition
+});
+
+window.addEventListener('resize', function () {
+  if (window.innerWidth > 640) {
+    asideEl.classList.remove('menu-open');
+  }
+  setMainPadding();
+});
+
+window.addEventListener('load', setMainPadding);
+
+
+/* ─────────────────────────────────────────
    Internationalisation (EN / DE)
 ───────────────────────────────────────── */
 var currentLang = 'en';
@@ -126,7 +156,6 @@ document.querySelectorAll('.lang-btn').forEach(function (btn) {
    Navigation — fade + slide between sections
 ───────────────────────────────────────── */
 var navLinks = document.querySelectorAll('nav a[data-target]');
-var mainEl   = document.querySelector('main');
 var current  = null;
 var busy     = false;
 
@@ -138,6 +167,12 @@ function showSection(targetId) {
   navLinks.forEach(function (l) { l.classList.remove('active'); });
   var activeLink = document.querySelector('nav a[data-target="' + targetId + '"]');
   if (activeLink) activeLink.classList.add('active');
+
+  // Close mobile menu when navigating
+  if (window.innerWidth <= 640) {
+    asideEl.classList.remove('menu-open');
+    setTimeout(setMainPadding, 360);
+  }
 
   if (!current) {
     next.style.display = 'block';

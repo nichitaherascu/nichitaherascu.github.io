@@ -25,15 +25,23 @@
 
 <!-- ── Sidebar ── -->
 <aside>
-  <div class="sidebar-top">
 
+  <!-- Always visible row: name + hamburger -->
+  <div class="name-row">
+    <span class="name">Nichita Herascu</span>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Collapsible on mobile -->
+  <div class="aside-menu">
     <div class="lang-toggle">
       <span class="lang-btn active" data-lang="en">EN</span>
       <span class="lang-sep">/</span>
       <span class="lang-btn" data-lang="de">DE</span>
     </div>
-
-    <span class="name">Nichita Herascu</span>
 
     <nav>
       <a data-target="paintings" data-i18n="nav-paintings">Paintings</a>
@@ -42,8 +50,9 @@
       <a data-target="contact"   data-i18n="nav-contact">Contact</a>
     </nav>
 
+    <div class="sidebar-bottom">© 2026 Nichita Herascu</div>
   </div>
-  <div class="sidebar-bottom">© 2026 Nichita Herascu</div>
+
 </aside>
 
 <!-- ── Main ── -->
