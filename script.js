@@ -35,20 +35,16 @@ function applyPaintingOverrides() {
   } catch (e) {}
 }
 
+/* Single free-form text block: blank lines → separate <p> tags */
 function applyTextOverrides() {
   var stored = localStorage.getItem('nh_text_content');
   if (!stored) return;
   try {
     var c = JSON.parse(stored);
-    var section = document.getElementById('text');
-    if (!section) return;
-    var map = { intro:'text-intro', process:'text-process', place:'text-place', biography:'text-biography' };
-    Object.keys(map).forEach(function (key) {
-      if (c[key] !== undefined) {
-        var el = section.querySelector('[data-i18n="'+map[key]+'"]');
-        if (el) el.textContent = c[key];
-      }
-    });
+    var textInner = document.querySelector('#text .text-inner');
+    if (!textInner || !c.all) return;
+    var paras = c.all.split(/\n\n+/).map(function(p){ return p.trim(); }).filter(Boolean);
+    textInner.innerHTML = paras.map(function(p){ return '<p>'+escHtml(p)+'</p>'; }).join('');
   } catch (e) {}
 }
 
