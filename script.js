@@ -19,6 +19,30 @@ function animate(el, fromProps, toProps, duration, callback) {
 
 
 /* ─────────────────────────────────────────
+   Load painting overrides from localStorage
+   (set by admin.html)
+───────────────────────────────────────── */
+function loadPaintingOverrides() {
+  var stored = localStorage.getItem('nh_paintings');
+  if (!stored) return;
+  try {
+    var paintings = JSON.parse(stored);
+    paintings.forEach(function (p) {
+      var item = document.querySelector('.painting-item[data-id="' + p.id + '"]');
+      if (!item) return;
+      item.setAttribute('data-title',  p.title);
+      item.setAttribute('data-year',   p.year);
+      item.setAttribute('data-medium', p.medium);
+      var img = item.querySelector('img');
+      if (img && p.src) img.src = p.src;
+    });
+  } catch (e) {}
+}
+
+loadPaintingOverrides();
+
+
+/* ─────────────────────────────────────────
    Loader
 ───────────────────────────────────────── */
 var loader     = document.getElementById('loader');
@@ -29,7 +53,6 @@ window.addEventListener('load', function () {
     loaderFill.style.transition = 'width 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
     loaderFill.style.width = '100%';
   }, 150);
-
   setTimeout(function () {
     animate(loader, { opacity: '1' }, { opacity: '0' }, 600, function () {
       loader.style.display = 'none';
@@ -41,9 +64,9 @@ window.addEventListener('load', function () {
 /* ─────────────────────────────────────────
    Hamburger menu (mobile)
 ───────────────────────────────────────── */
-var asideEl    = document.querySelector('aside');
-var hamburger  = document.getElementById('hamburger');
-var mainEl     = document.querySelector('main');
+var asideEl   = document.querySelector('aside');
+var hamburger = document.getElementById('hamburger');
+var mainEl    = document.querySelector('main');
 
 function setMainPadding() {
   if (window.innerWidth <= 640) {
@@ -55,13 +78,11 @@ function setMainPadding() {
 
 hamburger.addEventListener('click', function () {
   asideEl.classList.toggle('menu-open');
-  setTimeout(setMainPadding, 360); // after transition
+  setTimeout(setMainPadding, 360);
 });
 
 window.addEventListener('resize', function () {
-  if (window.innerWidth > 640) {
-    asideEl.classList.remove('menu-open');
-  }
+  if (window.innerWidth > 640) asideEl.classList.remove('menu-open');
   setMainPadding();
 });
 
@@ -71,8 +92,6 @@ window.addEventListener('load', setMainPadding);
 /* ─────────────────────────────────────────
    Internationalisation (EN / DE)
 ───────────────────────────────────────── */
-var currentLang = 'en';
-
 var i18n = {
   en: {
     'nav-paintings':              'Paintings',
@@ -131,7 +150,6 @@ var i18n = {
 };
 
 function applyLanguage(lang) {
-  currentLang = lang;
   document.querySelectorAll('[data-i18n]').forEach(function (el) {
     var key = el.getAttribute('data-i18n');
     if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
@@ -146,14 +164,12 @@ function applyLanguage(lang) {
 }
 
 document.querySelectorAll('.lang-btn').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    applyLanguage(this.getAttribute('data-lang'));
-  });
+  btn.addEventListener('click', function () { applyLanguage(this.getAttribute('data-lang')); });
 });
 
 
 /* ─────────────────────────────────────────
-   Navigation — fade + slide between sections
+   Navigation
 ───────────────────────────────────────── */
 var navLinks = document.querySelectorAll('nav a[data-target]');
 var current  = null;
@@ -168,7 +184,6 @@ function showSection(targetId) {
   var activeLink = document.querySelector('nav a[data-target="' + targetId + '"]');
   if (activeLink) activeLink.classList.add('active');
 
-  // Close mobile menu when navigating
   if (window.innerWidth <= 640) {
     asideEl.classList.remove('menu-open');
     setTimeout(setMainPadding, 360);
@@ -176,11 +191,7 @@ function showSection(targetId) {
 
   if (!current) {
     next.style.display = 'block';
-    animate(next,
-      { opacity: '0', transform: 'translateY(12px)' },
-      { opacity: '1', transform: 'translateY(0)' },
-      400
-    );
+    animate(next, { opacity: '0', transform: 'translateY(12px)' }, { opacity: '1', transform: 'translateY(0)' }, 400);
     current = next;
     return;
   }
@@ -195,28 +206,21 @@ function showSection(targetId) {
       current.style.transition = '';
       mainEl.scrollTo({ top: 0, behavior: 'smooth' });
       next.style.display = 'block';
-      animate(next,
-        { opacity: '0', transform: 'translateY(12px)' },
-        { opacity: '1', transform: 'translateY(0)' },
-        380,
-        function () { busy = false; }
-      );
+      animate(next, { opacity: '0', transform: 'translateY(12px)' }, { opacity: '1', transform: 'translateY(0)' }, 380, function () { busy = false; });
       current = next;
     }
   );
 }
 
 navLinks.forEach(function (link) {
-  link.addEventListener('click', function () {
-    showSection(this.getAttribute('data-target'));
-  });
+  link.addEventListener('click', function () { showSection(this.getAttribute('data-target')); });
 });
 
 showSection('paintings');
 
 
 /* ─────────────────────────────────────────
-   Lightbox — fade + scale on open / close
+   Lightbox
 ───────────────────────────────────────── */
 var lightbox       = document.getElementById('lightbox');
 var lightboxInner  = lightbox.querySelector('.lightbox-inner');
@@ -237,21 +241,13 @@ function openLightbox(imgEl, title, year, medium) {
   document.body.style.overflow = 'hidden';
   animate(lightbox, { opacity: '0' }, { opacity: '1' }, 280);
   setTimeout(function () {
-    animate(lightboxInner,
-      { opacity: '0', transform: 'scale(0.96)' },
-      { opacity: '1', transform: 'scale(1)' },
-      340
-    );
+    animate(lightboxInner, { opacity: '0', transform: 'scale(0.96)' }, { opacity: '1', transform: 'scale(1)' }, 340);
   }, 100);
 }
 
 function closeLightbox() {
   if (!lightboxIsOpen) return;
-  animate(lightboxInner,
-    { opacity: '1', transform: 'scale(1)' },
-    { opacity: '0', transform: 'scale(0.96)' },
-    200
-  );
+  animate(lightboxInner, { opacity: '1', transform: 'scale(1)' }, { opacity: '0', transform: 'scale(0.96)' }, 200);
   setTimeout(function () {
     animate(lightbox, { opacity: '1' }, { opacity: '0' }, 240, function () {
       lightbox.style.display = 'none';
@@ -265,21 +261,12 @@ function closeLightbox() {
 
 document.querySelectorAll('.painting-item').forEach(function (item) {
   item.addEventListener('click', function () {
-    openLightbox(
-      item.querySelector('img'),
-      item.getAttribute('data-title'),
-      item.getAttribute('data-year'),
-      item.getAttribute('data-medium')
-    );
+    openLightbox(item.querySelector('img'), item.getAttribute('data-title'), item.getAttribute('data-year'), item.getAttribute('data-medium'));
   });
 });
 
 document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', function (e) {
-  if (e.target === lightbox) closeLightbox();
-});
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') closeLightbox();
-});
+lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
 
 })();

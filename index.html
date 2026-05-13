@@ -25,8 +25,6 @@
 
 <!-- ── Sidebar ── -->
 <aside>
-
-  <!-- Always visible row: name + hamburger -->
   <div class="name-row">
     <span class="name">Nichita Herascu</span>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">
@@ -34,25 +32,20 @@
       <span></span>
     </button>
   </div>
-
-  <!-- Collapsible on mobile -->
   <div class="aside-menu">
     <div class="lang-toggle">
       <span class="lang-btn active" data-lang="en">EN</span>
       <span class="lang-sep">/</span>
       <span class="lang-btn" data-lang="de">DE</span>
     </div>
-
     <nav>
       <a data-target="paintings" data-i18n="nav-paintings">Paintings</a>
       <a data-target="resume"    data-i18n="nav-resume">Resume</a>
       <a data-target="text"      data-i18n="nav-text">Text</a>
       <a data-target="contact"   data-i18n="nav-contact">Contact</a>
     </nav>
-
     <div class="sidebar-bottom">© 2026 Nichita Herascu</div>
   </div>
-
 </aside>
 
 <!-- ── Main ── -->
@@ -60,32 +53,36 @@
 
   <!-- Paintings -->
   <div id="paintings" class="section">
+    <!-- PAINTINGS:START -->
     <div class="paintings-grid">
-      <div class="painting-item" data-title="Untitled I" data-year="2024" data-medium="Oil on canvas">
+
+      <div class="painting-item" data-id="1" data-title="Untitled I" data-year="2024" data-medium="Oil on canvas">
         <img src="images/painting-1.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Figure Study II" data-year="2024" data-medium="Acrylic on linen">
+      <div class="painting-item" data-id="2" data-title="Figure Study II" data-year="2024" data-medium="Acrylic on linen">
         <img src="images/painting-2.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Still Life with Vessels" data-year="2023" data-medium="Oil on canvas">
+      <div class="painting-item" data-id="3" data-title="Still Life with Vessels" data-year="2023" data-medium="Oil on canvas">
         <img src="images/painting-3.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Horizon" data-year="2023" data-medium="Oil on panel">
+      <div class="painting-item" data-id="4" data-title="Horizon" data-year="2023" data-medium="Oil on panel">
         <img src="images/painting-4.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Portrait Study" data-year="2023" data-medium="Oil on canvas">
+      <div class="painting-item" data-id="5" data-title="Portrait Study" data-year="2023" data-medium="Oil on canvas">
         <img src="images/painting-5.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Reflection III" data-year="2022" data-medium="Acrylic on canvas">
+      <div class="painting-item" data-id="6" data-title="Reflection III" data-year="2022" data-medium="Acrylic on canvas">
         <img src="images/painting-6.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Interior" data-year="2022" data-medium="Oil on canvas">
+      <div class="painting-item" data-id="7" data-title="Interior" data-year="2022" data-medium="Oil on canvas">
         <img src="images/painting-7.jpg" alt="" />
       </div>
-      <div class="painting-item" data-title="Forest" data-year="2021" data-medium="Oil on linen">
+      <div class="painting-item" data-id="8" data-title="Forest" data-year="2021" data-medium="Oil on linen">
         <img src="images/painting-8.jpg" alt="" />
       </div>
+
     </div>
+    <!-- PAINTINGS:END -->
   </div>
 
   <!-- Resume -->
@@ -138,11 +135,7 @@
         <h2 class="resume-heading" data-i18n="resume-heading-contact">Contact</h2>
         <div class="resume-entry">
           <span class="resume-year" data-i18n="resume-studio-label">Studio</span>
-          <span class="resume-detail">
-            Str. Emil Racovita 22A<br />
-            041761<br />
-            Romania
-          </span>
+          <span class="resume-detail">Str. Emil Racovita 22A<br />041761<br />Romania</span>
         </div>
         <div class="resume-entry">
           <span class="resume-year" data-i18n="resume-email-label">Email</span>
@@ -193,6 +186,5 @@
 </div>
 
 <script src="script.js" defer></script>
-
 </body>
 </html>

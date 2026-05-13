@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Nichita Herascu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    background: #fff;
+    color: #000;
+    min-height: 100vh;
+  }
+
+  /* ── Login ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+  }
+
+  .login-title { font-size: 19px; font-weight: 700; margin-bottom: 0.5rem; }
+  .login-error { font-size: 12px; color: #c00; min-height: 18px; }
+
+  /* ── Inputs & buttons ── */
+  input[type="password"],
+  input[type="text"] {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #e0e0e0;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fff;
+  }
+
+  input:focus { border-color: #000; }
+
+  button {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+  }
+
+  .btn-primary  { background: #000; color: #fff; }
+  .btn-primary:hover  { background: #333; }
+  .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+
+  .btn-secondary { background: #fff; color: #000; border: 1px solid #e0e0e0; }
+  .btn-secondary:hover { background: #f5f5f5; }
+
+  .btn-ghost { background: none; color: #aaa; }
+  .btn-ghost:hover { color: #000; }
+
+  .btn-danger { background: none; color: #c00; border: 1px solid #fcc; }
+  .btn-danger:hover { background: #fff5f5; }
+
+  /* ── Admin panel ── */
+  #admin-panel { display: none; }
+
+  .admin-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .admin-title { font-size: 19px; font-weight: 700; }
+  .admin-actions { display: flex; gap: 0.8rem; align-items: center; }
+
+  /* ── GitHub settings banner ── */
+  .github-settings {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: #fafafa;
+  }
+
+  .github-settings .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .github-settings label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; }
+  .github-settings input { width: 220px; }
+  .github-settings input[data-field="owner"],
+  .github-settings input[data-field="repo"]  { width: 160px; }
+
+  .gh-status {
+    font-size: 12px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2px;
+    display: none;
+  }
+
+  .gh-status.success { background: #f0fff4; color: #2a7a2a; display: block; }
+  .gh-status.error   { background: #fff0f0; color: #c00;    display: block; }
+  .gh-status.loading { background: #f5f5f5; color: #666;    display: block; }
+
+  /* ── Painting rows ── */
+  #paintings-list {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .painting-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 2rem;
+    padding: 1.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: start;
+  }
+
+  .painting-thumb img {
+    width: 110px;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    background: #f5f5f5;
+  }
+
+  .painting-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field-group.full { grid-column: 1 / -1; }
+
+  .field-group label {
+    font-size: 11px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #000;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 99;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .painting-fields   { grid-template-columns: 1fr; }
+    .admin-header      { padding: 1rem; flex-wrap: wrap; gap: 0.8rem; }
+    .github-settings   { padding: 1rem; }
+    .github-settings input { width: 100%; }
+    #paintings-list    { padding: 1rem; }
+    .painting-row      { grid-template-columns: 80px 1fr; gap: 1rem; }
+    .painting-thumb img { width: 80px; height: 100px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Login ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <p class="login-title">Admin</p>
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" />
+    <button id="login-btn" class="btn-primary">Enter</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- ── Admin panel ── -->
+<div id="admin-panel">
+
+  <header class="admin-header">
+    <span class="admin-title">Paintings</span>
+    <div class="admin-actions">
+      <button id="publish-btn" class="btn-primary">Publish to live site ↑</button>
+      <button id="logout-btn"  class="btn-ghost">Logout</button>
+    </div>
+  </header>
+
+  <!-- GitHub settings -->
+  <div class="github-settings">
+    <div class="field-group">
+      <label>GitHub Token</label>
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" />
+    </div>
+    <div class="field-group">
+      <label>Owner</label>
+      <input type="text" id="gh-owner" data-field="owner" placeholder="nichitaherascu" />
+    </div>
+    <div class="field-group">
+      <label>Repository</label>
+      <input type="text" id="gh-repo" data-field="repo" placeholder="nichitaherascu.github.io" />
+    </div>
+    <button id="save-gh-btn" class="btn-secondary">Save settings</button>
+    <span id="gh-status" class="gh-status"></span>
+  </div>
+
+  <div id="paintings-list"></div>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
