@@ -19,20 +19,15 @@
   }
 
   /* ── Login ── */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
   .login-box { display: flex; flex-direction: column; gap: 1rem; width: 300px; }
   .login-title { font-size: 19px; font-weight: 700; margin-bottom: 0.5rem; }
   .login-error { font-size: 12px; color: #c00; min-height: 18px; }
 
-  /* ── Inputs ── */
+  /* ── Inputs & textareas ── */
   input[type="password"],
-  input[type="text"] {
+  input[type="text"],
+  textarea {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 15px;
     width: 100%;
@@ -42,7 +37,8 @@
     transition: border-color 0.2s;
     background: #fff;
   }
-  input:focus { border-color: #000; }
+  input:focus, textarea:focus { border-color: #000; }
+  textarea { resize: vertical; line-height: 1.6; }
 
   /* ── Buttons ── */
   button {
@@ -53,62 +49,79 @@
     padding: 0.6rem 1.2rem;
     transition: background 0.2s, color 0.2s;
   }
-
-  .btn-primary   { background: #000; color: #fff; }
-  .btn-primary:hover   { background: #333; }
-  .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
-
-  .btn-secondary { background: #fff; color: #000; border: 1px solid #e0e0e0; }
-  .btn-secondary:hover { background: #f5f5f5; }
-
-  .btn-ghost { background: none; color: #aaa; }
-  .btn-ghost:hover { color: #000; }
+  .btn-primary           { background: #000; color: #fff; }
+  .btn-primary:hover     { background: #333; }
+  .btn-primary:disabled  { background: #aaa; cursor: not-allowed; }
+  .btn-secondary         { background: #fff; color: #000; border: 1px solid #e0e0e0; }
+  .btn-secondary:hover   { background: #f5f5f5; }
+  .btn-ghost             { background: none; color: #aaa; }
+  .btn-ghost:hover       { color: #000; }
+  .btn-move              { background: none; border: 1px solid #e0e0e0; color: #555; padding: 0.3rem 0.7rem; font-size: 14px; }
+  .btn-move:hover        { background: #f5f5f5; border-color: #999; }
+  .btn-move:disabled     { opacity: 0.25; cursor: not-allowed; }
+  .btn-remove            { background: none; border: 1px solid #fcc; color: #c00; padding: 0.3rem 0.8rem; font-size: 13px; margin-left: auto; }
+  .btn-remove:hover      { background: #fff0f0; }
+  .btn-remove-entry      { background: none; border: none; color: #ccc; font-size: 18px; padding: 0 0.3rem; line-height: 1; cursor: pointer; flex-shrink: 0; }
+  .btn-remove-entry:hover { color: #c00; }
 
   /* ── Admin panel ── */
   #admin-panel { display: none; }
 
   .admin-header {
-    position: sticky;
-    top: 0;
+    position: sticky; top: 0;
     background: #fff;
     border-bottom: 1px solid #e0e0e0;
     padding: 1.2rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
     z-index: 10;
   }
-
-  .admin-title { font-size: 19px; font-weight: 700; }
+  .admin-title  { font-size: 19px; font-weight: 700; }
   .admin-actions { display: flex; gap: 0.8rem; align-items: center; }
 
   /* ── GitHub settings ── */
   .github-settings {
     border-bottom: 1px solid #e0e0e0;
     padding: 1.2rem 2rem;
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
+    display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap;
     background: #fafafa;
   }
-
   .github-settings .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
   .github-settings label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; }
   .github-settings input { width: 220px; }
-  .github-settings input[id="gh-owner"],
-  .github-settings input[id="gh-repo"] { width: 160px; }
-
-  .gh-status {
-    font-size: 12px;
-    padding: 0.4rem 0.8rem;
-    display: none;
-  }
+  #gh-owner, #gh-repo { width: 160px; }
+  .gh-status { font-size: 12px; padding: 0.4rem 0.8rem; display: none; }
   .gh-status.success { background: #f0fff4; color: #2a7a2a; display: block; }
   .gh-status.error   { background: #fff0f0; color: #c00;    display: block; }
   .gh-status.loading { background: #f5f5f5; color: #666;    display: block; }
 
-  /* ── Painting rows ── */
+  /* ── Tabs ── */
+  .admin-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 2rem;
+    position: sticky;
+    top: 61px;
+    background: #fff;
+    z-index: 9;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.9rem 1.5rem;
+    font-size: 15px;
+    color: #aaa;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.2s;
+  }
+  .tab-btn.active { color: #000; border-bottom-color: #000; }
+  .tab-btn:hover  { color: #000; }
+
+  .tab-panel         { display: none; }
+  .tab-panel.active  { display: block; }
+
+  /* ── Paintings tab ── */
   #paintings-list { padding: 2rem; display: flex; flex-direction: column; }
 
   .painting-row {
@@ -119,103 +132,67 @@
     border-bottom: 1px solid #f0f0f0;
     align-items: start;
   }
+  .painting-thumb img { width: 110px; height: 140px; object-fit: cover; display: block; background: #f5f5f5; }
+  .painting-fields    { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-group        { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field-group.full   { grid-column: 1 / -1; }
+  .field-group label  { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; }
+  .row-actions        { grid-column: 1 / -1; display: flex; gap: 0.5rem; align-items: center; padding-top: 0.5rem; }
 
-  .painting-thumb img {
-    width: 110px;
-    height: 140px;
-    object-fit: cover;
-    display: block;
-    background: #f5f5f5;
-  }
-
-  .painting-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
-  .field-group.full { grid-column: 1 / -1; }
-  .field-group label {
-    font-size: 11px;
-    color: #aaa;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  /* ── Row action buttons ── */
-  .row-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    padding-top: 0.5rem;
-  }
-
-  .btn-move {
-    background: none;
-    border: 1px solid #e0e0e0;
-    color: #555;
-    padding: 0.3rem 0.7rem;
-    font-size: 14px;
-    line-height: 1;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .btn-move:hover    { background: #f5f5f5; border-color: #999; }
-  .btn-move:disabled { opacity: 0.25; cursor: not-allowed; }
-
-  .btn-remove {
-    background: none;
-    border: 1px solid #fcc;
-    color: #c00;
-    padding: 0.3rem 0.8rem;
-    font-size: 13px;
-    margin-left: auto;
-    transition: background 0.2s;
-  }
-  .btn-remove:hover { background: #fff0f0; }
-
-  /* ── Add painting button ── */
   .add-row-btn {
-    width: 100%;
-    padding: 1.2rem;
-    border: 1px dashed #e0e0e0;
-    background: none;
-    color: #aaa;
-    font-size: 15px;
-    margin-top: 1rem;
+    width: 100%; padding: 1.2rem;
+    border: 1px dashed #e0e0e0; background: none;
+    color: #aaa; font-size: 15px; margin-top: 1rem;
     transition: border-color 0.2s, color 0.2s;
-    text-align: center;
   }
   .add-row-btn:hover { border-color: #000; color: #000; }
 
+  /* ── Text & Resume editors ── */
+  .editor-content { padding: 2rem; max-width: 720px; display: flex; flex-direction: column; gap: 2rem; }
+
+  .editor-section { display: flex; flex-direction: column; gap: 0.5rem; }
+  .editor-section h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .editor-block {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 1.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .editor-block h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── Entry rows ── */
+  .entry-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .entry-row  { display: grid; grid-template-columns: 130px 1fr auto; gap: 0.6rem; align-items: center; }
+
+  .add-entry-btn {
+    background: none; border: 1px dashed #e0e0e0;
+    color: #aaa; font-size: 13px;
+    padding: 0.5rem 1rem; width: 100%; margin-top: 0.3rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .add-entry-btn:hover { border-color: #000; color: #000; }
+
   /* ── Toast ── */
   .toast {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
+    position: fixed; bottom: 2rem; left: 50%;
     transform: translateX(-50%) translateY(12px);
-    background: #000;
-    color: #fff;
-    padding: 0.7rem 1.5rem;
-    font-size: 13px;
-    opacity: 0;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 99;
+    background: #000; color: #fff;
+    padding: 0.7rem 1.5rem; font-size: 13px;
+    opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none; white-space: nowrap; z-index: 99;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ── Responsive ── */
   @media (max-width: 600px) {
-    .painting-fields { grid-template-columns: 1fr; }
     .admin-header    { padding: 1rem; flex-wrap: wrap; gap: 0.8rem; }
     .github-settings { padding: 1rem; }
     .github-settings input { width: 100%; }
+    .editor-content  { padding: 1rem; }
     #paintings-list  { padding: 1rem; }
     .painting-row    { grid-template-columns: 80px 1fr; gap: 1rem; }
+    .painting-fields { grid-template-columns: 1fr; }
     .painting-thumb img { width: 80px; height: 100px; }
+    .entry-row { grid-template-columns: 90px 1fr auto; }
   }
 </style>
 </head>
@@ -235,13 +212,14 @@
 <div id="admin-panel">
 
   <header class="admin-header">
-    <span class="admin-title">Paintings</span>
+    <span class="admin-title" id="admin-tab-title">Paintings</span>
     <div class="admin-actions">
       <button id="publish-btn" class="btn-primary">Publish to live site ↑</button>
       <button id="logout-btn"  class="btn-ghost">Logout</button>
     </div>
   </header>
 
+  <!-- GitHub settings -->
   <div class="github-settings">
     <div class="field-group">
       <label>GitHub Token</label>
@@ -259,7 +237,27 @@
     <span id="gh-status" class="gh-status"></span>
   </div>
 
-  <div id="paintings-list"></div>
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="paintings">Paintings</button>
+    <button class="tab-btn" data-tab="text">Text</button>
+    <button class="tab-btn" data-tab="resume">Resume</button>
+  </div>
+
+  <!-- Paintings tab -->
+  <div id="tab-paintings" class="tab-panel active">
+    <div id="paintings-list"></div>
+  </div>
+
+  <!-- Text tab -->
+  <div id="tab-text" class="tab-panel">
+    <div class="editor-content" id="text-editor"></div>
+  </div>
+
+  <!-- Resume tab -->
+  <div id="tab-resume" class="tab-panel">
+    <div class="editor-content" id="resume-editor"></div>
+  </div>
 
 </div>
 
