@@ -4,16 +4,15 @@
    PASSWORD CONFIG
    Default password: admin
 
-   To change it, open your browser console and run:
+   To change it, open browser console and run:
      crypto.subtle.digest('SHA-256', new TextEncoder().encode('yournewpassword'))
        .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
-   Then replace PASSWORD_HASH below with the result.
+   Paste the result as PASSWORD_HASH below.
 ───────────────────────────────────────── */
 var PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
 
 /* ─────────────────────────────────────────
-   Default painting data
-   Keep in sync with index.html
+   Default painting data — keep in sync with index.html
 ───────────────────────────────────────── */
 var defaultPaintings = [
   { id: 1, src: 'images/painting-1.jpg', title: 'Untitled I',              year: '2024', medium: 'Oil on canvas'     },
@@ -35,6 +34,10 @@ function getPaintings() {
   return JSON.parse(JSON.stringify(defaultPaintings));
 }
 
+function savePaintings(paintings) {
+  localStorage.setItem('nh_paintings', JSON.stringify(paintings));
+}
+
 function hashPassword(pw) {
   return crypto.subtle
     .digest('SHA-256', new TextEncoder().encode(pw))
@@ -49,20 +52,14 @@ function escapeAttr(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 }
 
-function toBase64(str) {
-  return btoa(unescape(encodeURIComponent(str)));
+function toBase64(str)  { return btoa(unescape(encodeURIComponent(str))); }
+function fromBase64(b64) { return decodeURIComponent(escape(atob(b64))); }
+
+function nextId(paintings) {
+  if (!paintings.length) return 1;
+  return Math.max.apply(null, paintings.map(function (p) { return p.id; })) + 1;
 }
 
-function fromBase64(b64) {
-  return decodeURIComponent(escape(atob(b64)));
-}
-
-/* ─────────────────────────────────────────
-   Auto-detect GitHub owner + repo from URL
-   e.g. nichitaherascu.github.io
-     → owner: nichitaherascu
-     → repo:  nichitaherascu.github.io
-───────────────────────────────────────── */
 function detectGitHub() {
   var host = window.location.hostname;
   if (host.endsWith('.github.io')) {
@@ -125,7 +122,6 @@ pwInput.addEventListener('keydown', function (e) {
 function loadGitHubSettings() {
   var saved = JSON.parse(localStorage.getItem('nh_gh_settings') || '{}');
   var auto  = detectGitHub();
-
   document.getElementById('gh-token').value = saved.token || '';
   document.getElementById('gh-owner').value = saved.owner || (auto && auto.owner) || '';
   document.getElementById('gh-repo').value  = saved.repo  || (auto && auto.repo)  || '';
@@ -141,13 +137,35 @@ document.getElementById('save-gh-btn').addEventListener('click', function () {
 });
 
 /* ─────────────────────────────────────────
-   Render painting rows
+   Collect current field values from DOM
+───────────────────────────────────────── */
+function collectPaintings() {
+  var paintings = getPaintings();
+  var rows = document.querySelectorAll('.painting-row');
+  var result = [];
+
+  rows.forEach(function (row) {
+    var id = parseInt(row.getAttribute('data-id'));
+    var p  = paintings.find(function (x) { return x.id === id; }) || { id: id };
+    row.querySelectorAll('input[data-field]').forEach(function (input) {
+      p[input.getAttribute('data-field')] = input.value;
+    });
+    result.push(p);
+  });
+
+  return result;
+}
+
+/* ─────────────────────────────────────────
+   Render all painting rows
 ───────────────────────────────────────── */
 function field(label, name, id, value, full) {
-  return '<div class="field-group' + (full ? ' full' : '') + '">' +
+  return (
+    '<div class="field-group' + (full ? ' full' : '') + '">' +
     '<label>' + label + '</label>' +
     '<input type="text" data-field="' + name + '" data-id="' + id + '" value="' + escapeAttr(value) + '" />' +
-    '</div>';
+    '</div>'
+  );
 }
 
 function renderPaintings() {
@@ -155,53 +173,121 @@ function renderPaintings() {
   var paintings = getPaintings();
   list.innerHTML = '';
 
-  paintings.forEach(function (p) {
+  paintings.forEach(function (p, index) {
     var row = document.createElement('div');
-    row.className = 'painting-row';
-    row.innerHTML =
-      '<div class="painting-thumb"><img src="' + escapeAttr(p.src) + '" alt="" /></div>' +
-      '<div class="painting-fields">' +
-        field('Title',      'title',  p.id, p.title)      +
-        field('Year',       'year',   p.id, p.year)       +
-        field('Medium',     'medium', p.id, p.medium)     +
-        field('Image path', 'src',    p.id, p.src, true)  +
-      '</div>';
-    list.appendChild(row);
-  });
+    row.className  = 'painting-row';
+    row.setAttribute('data-id', p.id);
 
-  list.querySelectorAll('input[data-field="src"]').forEach(function (input) {
-    input.addEventListener('change', function () {
-      var thumb = input.closest('.painting-row').querySelector('.painting-thumb img');
-      if (thumb) thumb.src = input.value;
+    row.innerHTML =
+      '<div class="painting-thumb"><img src="' + escapeAttr(p.src || '') + '" alt="" /></div>' +
+      '<div class="painting-fields">' +
+        field('Title',      'title',  p.id, p.title  || '') +
+        field('Year',       'year',   p.id, p.year   || '') +
+        field('Medium',     'medium', p.id, p.medium || '') +
+        field('Image path', 'src',    p.id, p.src    || '', true) +
+        '<div class="row-actions full">' +
+          '<button class="btn-move btn-up"   data-id="' + p.id + '" ' + (index === 0 ? 'disabled' : '') + '>↑</button>' +
+          '<button class="btn-move btn-down" data-id="' + p.id + '" ' + (index === paintings.length - 1 ? 'disabled' : '') + '>↓</button>' +
+          '<button class="btn-remove"        data-id="' + p.id + '">Remove</button>' +
+        '</div>' +
+      '</div>';
+
+    list.appendChild(row);
+
+    // Live thumbnail update when src changes
+    row.querySelector('input[data-field="src"]').addEventListener('change', function () {
+      row.querySelector('.painting-thumb img').src = this.value;
     });
   });
-}
 
-/* ─────────────────────────────────────────
-   Collect current field values
-───────────────────────────────────────── */
-function collectPaintings() {
-  var paintings = getPaintings();
-  document.querySelectorAll('#paintings-list input[data-id]').forEach(function (input) {
-    var id  = parseInt(input.getAttribute('data-id'));
-    var key = input.getAttribute('data-field');
-    var p   = paintings.find(function (x) { return x.id === id; });
-    if (p) p[key] = input.value;
+  // Up / Down buttons
+  list.querySelectorAll('.btn-up').forEach(function (btn) {
+    btn.addEventListener('click', function () { movePainting(parseInt(btn.getAttribute('data-id')), -1); });
   });
-  return paintings;
+
+  list.querySelectorAll('.btn-down').forEach(function (btn) {
+    btn.addEventListener('click', function () { movePainting(parseInt(btn.getAttribute('data-id')), 1); });
+  });
+
+  // Remove buttons
+  list.querySelectorAll('.btn-remove').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (confirm('Remove this painting? This cannot be undone until you publish.')) {
+        removePainting(parseInt(btn.getAttribute('data-id')));
+      }
+    });
+  });
+
+  // Add painting button
+  var addBtn = document.createElement('button');
+  addBtn.className   = 'add-row-btn';
+  addBtn.textContent = '+ Add painting';
+  addBtn.addEventListener('click', addPainting);
+  list.appendChild(addBtn);
 }
 
 /* ─────────────────────────────────────────
-   Build paintings HTML snippet
+   Move painting up (-1) or down (+1)
+───────────────────────────────────────── */
+function movePainting(id, direction) {
+  var paintings = collectPaintings();
+  var index = paintings.findIndex(function (p) { return p.id === id; });
+  var target = index + direction;
+
+  if (target < 0 || target >= paintings.length) return;
+
+  var temp          = paintings[index];
+  paintings[index]  = paintings[target];
+  paintings[target] = temp;
+
+  savePaintings(paintings);
+  renderPaintings();
+}
+
+/* ─────────────────────────────────────────
+   Remove painting by id
+───────────────────────────────────────── */
+function removePainting(id) {
+  var paintings = collectPaintings().filter(function (p) { return p.id !== id; });
+  savePaintings(paintings);
+  renderPaintings();
+}
+
+/* ─────────────────────────────────────────
+   Add new empty painting at the end
+───────────────────────────────────────── */
+function addPainting() {
+  var paintings = collectPaintings();
+  paintings.push({
+    id:     nextId(paintings),
+    src:    '',
+    title:  'New Painting',
+    year:   new Date().getFullYear().toString(),
+    medium: '',
+  });
+  savePaintings(paintings);
+  renderPaintings();
+
+  // Scroll new row into view
+  var rows = document.querySelectorAll('.painting-row');
+  var last = rows[rows.length - 1];
+  if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Focus title input
+  var titleInput = last && last.querySelector('input[data-field="title"]');
+  if (titleInput) { titleInput.select(); }
+}
+
+/* ─────────────────────────────────────────
+   Build paintings HTML snippet for publishing
 ───────────────────────────────────────── */
 function buildPaintingsHTML(paintings) {
   return paintings.map(function (p) {
     return (
       '        <div class="painting-item" data-id="' + p.id + '" ' +
-      'data-title="'  + escapeAttr(p.title)  + '" ' +
-      'data-year="'   + escapeAttr(p.year)   + '" ' +
-      'data-medium="' + escapeAttr(p.medium) + '">\n' +
-      '          <img src="' + escapeAttr(p.src) + '" alt="" />\n' +
+      'data-title="'  + escapeAttr(p.title  || '') + '" ' +
+      'data-year="'   + escapeAttr(p.year   || '') + '" ' +
+      'data-medium="' + escapeAttr(p.medium || '') + '">\n' +
+      '          <img src="' + escapeAttr(p.src || '') + '" alt="" />\n' +
       '        </div>'
     );
   }).join('\n');
@@ -209,30 +295,25 @@ function buildPaintingsHTML(paintings) {
 
 /* ─────────────────────────────────────────
    Publish to GitHub
-   1. Fetch current index.html from GitHub API
-   2. Replace content between markers
-   3. Commit updated file back
 ───────────────────────────────────────── */
 function setStatus(type, msg) {
-  ghStatus.className = 'gh-status ' + type;
+  ghStatus.className   = 'gh-status ' + type;
   ghStatus.textContent = msg;
 }
 
 publishBtn.addEventListener('click', function () {
   var settings = JSON.parse(localStorage.getItem('nh_gh_settings') || '{}');
-  var token    = (document.getElementById('gh-token').value.trim()) || settings.token;
-  var owner    = (document.getElementById('gh-owner').value.trim()) || settings.owner;
-  var repo     = (document.getElementById('gh-repo').value.trim())  || settings.repo;
+  var token = document.getElementById('gh-token').value.trim() || settings.token;
+  var owner = document.getElementById('gh-owner').value.trim() || settings.owner;
+  var repo  = document.getElementById('gh-repo').value.trim()  || settings.repo;
 
   if (!token || !owner || !repo) {
-    setStatus('error', 'Fill in your GitHub token, owner and repository above first.');
+    setStatus('error', 'Fill in your GitHub token, owner and repository first.');
     return;
   }
 
   var paintings = collectPaintings();
-
-  // Save to localStorage too
-  localStorage.setItem('nh_paintings', JSON.stringify(paintings));
+  savePaintings(paintings);
 
   var apiUrl  = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/index.html';
   var headers = {
@@ -241,14 +322,13 @@ publishBtn.addEventListener('click', function () {
     'Content-Type':  'application/json',
   };
 
-  publishBtn.disabled      = true;
-  publishBtn.textContent   = 'Publishing…';
+  publishBtn.disabled    = true;
+  publishBtn.textContent = 'Publishing…';
   setStatus('loading', 'Fetching index.html from GitHub…');
 
-  // Step 1 — read current file
   fetch(apiUrl, { headers: headers })
     .then(function (res) {
-      if (!res.ok) throw new Error('Could not fetch index.html (status ' + res.status + '). Check your token and repo name.');
+      if (!res.ok) throw new Error('Could not fetch index.html (status ' + res.status + '). Check your token and repo.');
       return res.json();
     })
     .then(function (data) {
@@ -261,7 +341,7 @@ publishBtn.addEventListener('click', function () {
       var end      = content.indexOf(endTag) + endTag.length;
 
       if (start === -1 || end === -1) {
-        throw new Error('Marker comments not found in index.html. Make sure the file has <!-- PAINTINGS:START --> and <!-- PAINTINGS:END -->.');
+        throw new Error('Marker comments not found in index.html.');
       }
 
       var newBlock =
@@ -274,12 +354,11 @@ publishBtn.addEventListener('click', function () {
 
       setStatus('loading', 'Committing changes…');
 
-      // Step 2 — commit updated file
       return fetch(apiUrl, {
         method:  'PUT',
         headers: headers,
         body: JSON.stringify({
-          message: 'Update paintings metadata via admin',
+          message: 'Update paintings via admin',
           content: toBase64(updated),
           sha:     sha,
         }),
@@ -290,7 +369,7 @@ publishBtn.addEventListener('click', function () {
       return res.json();
     })
     .then(function () {
-      setStatus('success', '✓ Published! Your site will update in about 1 minute.');
+      setStatus('success', '✓ Published! Site updates in ~1 minute.');
       showToast('Published ✓');
     })
     .catch(function (err) {
@@ -318,7 +397,7 @@ document.getElementById('logout-btn').addEventListener('click', function () {
 ───────────────────────────────────────── */
 function showToast(msg) {
   var toast = document.createElement('div');
-  toast.className = 'toast';
+  toast.className   = 'toast';
   toast.textContent = msg;
   document.body.appendChild(toast);
   setTimeout(function () { toast.classList.add('show'); }, 10);
