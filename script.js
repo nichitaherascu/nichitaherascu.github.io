@@ -133,13 +133,6 @@ var i18n = {
     'resume-heading-exhibitions':'Selected Exhibitions',
     'resume-heading-contact':'Contact',
     'resume-studio-label':'Studio','resume-email-label':'Email',
-    'text-intro':'Painting is a way of thinking with the hand. Each work begins not with an image in mind but with a surface and a question — what remains when everything unnecessary is removed.',
-    'text-heading-process':'Process',
-    'text-process':'The works are built in layers, slowly. Oil on canvas or linen, sometimes panel. Colour is arrived at through mixing and erasure rather than selection. A painting is finished when it starts to resist further change.',
-    'text-heading-place':'Place',
-    'text-place':'Much of the work is rooted in landscape — not as subject but as condition. The flatness of the east, the grey weight of winter light, the particular silence of fields at the edge of a town.',
-    'text-heading-biography':'Biography',
-    'text-biography':'Nichita Herascu is a painter based in Europe. He studied fine art and has exhibited work internationally. He is currently working on a new body of work.',
   },
   de: {
     'nav-paintings':'Gemälde','nav-resume':'Lebenslauf','nav-text':'Text','nav-contact':'Kontakt',
@@ -149,13 +142,6 @@ var i18n = {
     'resume-heading-exhibitions':'Ausgewählte Ausstellungen',
     'resume-heading-contact':'Kontakt',
     'resume-studio-label':'Atelier','resume-email-label':'E-Mail',
-    'text-intro':'Malen ist eine Weise des Denkens mit der Hand. Jedes Werk beginnt nicht mit einem Bild im Kopf, sondern mit einer Oberfläche und einer Frage – was bleibt übrig, wenn alles Unnötige entfernt wird.',
-    'text-heading-process':'Prozess',
-    'text-process':'Die Werke entstehen in Schichten, langsam. Öl auf Leinwand oder Leinen, manchmal auf Holz. Die Farbe entsteht durch Mischen und Auslöschen, nicht durch Auswählen. Ein Gemälde ist fertig, wenn es beginnt, weiteren Veränderungen zu widerstehen.',
-    'text-heading-place':'Ort',
-    'text-place':'Ein Großteil der Arbeit wurzelt in der Landschaft – nicht als Motiv, sondern als Zustand. Die Weite des Ostens, das graue Gewicht des Winterlichts, die besondere Stille der Felder am Rand einer Stadt.',
-    'text-heading-biography':'Biografie',
-    'text-biography':'Nichita Herascu ist ein in Europa lebender Maler. Er hat Bildende Kunst studiert und seine Werke international ausgestellt. Derzeit arbeitet er an einem neuen Werkkörper.',
   }
 };
 
