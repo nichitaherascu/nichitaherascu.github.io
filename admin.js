@@ -1,17 +1,12 @@
-
----
-
-### 2. `admin.js`
-
 javascript (function () {
 
-/* ───────────────────────────────────────── PASSWORD (default: "admin") ───────────────────────────────────────── */ var PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
+/* ───────────────────────────────────────── PASSWORD (default: "admin") To change — run in browser console: crypto.subtle.digest('SHA-256', new TextEncoder().encode('newpassword')) .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''))) Paste result as PASSWORD_HASH. ───────────────────────────────────────── */ var PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
 
-/* ───────────────────────────────────────── Default data ───────────────────────────────────────── */ var defaultPaintings = [ { id:1, src:'images/painting-1.jpg', title:'Untitled I', year:'2024', medium:'Oil on canvas', description:'' }, { id:2, src:'images/painting-2.jpg', title:'Figure Study II', year:'2024', medium:'Acrylic on linen', description:'' }, { id:3, src:'images/painting-3.jpg', title:'Still Life with Vessels', year:'2023', medium:'Oil on canvas', description:'' }, { id:4, src:'images/painting-4.jpg', title:'Horizon', year:'2023', medium:'Oil on panel', description:'' }, { id:5, src:'images/painting-5.jpg', title:'Portrait Study', year:'2023', medium:'Oil on canvas', description:'' }, { id:6, src:'images/painting-6.jpg', title:'Reflection III', year:'2022', medium:'Acrylic on canvas', description:'' }, { id:7, src:'images/painting-7.jpg', title:'Interior', year:'2022', medium:'Oil on canvas', description:'' }, { id:8, src:'images/painting-8.jpg', title:'Forest', year:'2021', medium:'Oil on linen', description:'' }, ];
+/* ───────────────────────────────────────── Default data ───────────────────────────────────────── */ var defaultPaintings = [ { id:1, src:'images/painting-1.jpg', title:'Good Soul', year:'2025', medium:'Oil on Jute', description:'' }, { id:2, src:'images/painting-2.jpg', title:'Peeking Yeshua', year:'2026', medium:'Oil on linen', description:'' }, { id:3, src:'images/painting-3.jpg', title:'Uncle', year:'2025', medium:'Oil on canvas',description:'' }, { id:4, src:'images/painting-4.jpg', title:'Doxa', year:'2026', medium:'Oil on Linen', description:'' }, { id:5, src:'images/painting-5.jpg', title:'Orpheus', year:'2026', medium:'Oil on Linen', description:'' }, ];
 
-var defaultTextContent = { intro: 'Painting is a way of thinking with the hand. Each work begins not with an image in mind but with a surface and a question — what remains when everything unnecessary is removed.', process: 'The works are built in layers, slowly. Oil on canvas or linen, sometimes panel. Colour is arrived at through mixing and erasure rather than selection. A painting is finished when it starts to resist further change.', place: 'Much of the work is rooted in landscape — not as subject but as condition. The flatness of the east, the grey weight of winter light, the particular silence of fields at the edge of a town.', biography: 'Nichita Herascu is a painter based in Europe. He studied fine art and has exhibited work internationally. He is currently working on a new body of work.', };
+var defaultTextContent = { intro: 'Born in Bucharest in 2000, Nichita works in oil paint and in sound.', process: '', place: '', biography: '', };
 
-var defaultResumeContent = { name: 'Nichita Herascu', bio: ['Born in 2000 in Bucharest, Romania.', 'Resides and works in Bucharest, Romania.'], education: [ { id:1, years:'2021 – 2022', detail:'Photography and Videography, University of Arts Bucharest, Bucharest, Romania' }, { id:2, years:'2019 – 2020', detail:'Advanced Graphic Design, Pixellab, Bucharest, Romania' }, { id:3, years:'2015 – 2019', detail:'Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania' }, ], exhibitions: [ { id:1, year:'2019', detail:'Extravaganzza, group exhibition, Bucharest, Romania' }, { id:2, year:'2019', detail:'Tête-à-Tête 3, group exhibition, Bucharest, Romania' }, { id:3, year:'2018', detail:'MNAC, group exhibition, Bucharest, Romania' }, { id:4, year:'2017', detail:'Tête-à-Tête 2, Artmark, group exhibition, Bucharest, Romania' }, ], studio: 'Str. Emil Racovita 22A\n041761\nRomania', email: 'nichitaherascu@gmail.com', };
+var defaultResumeContent = { name: 'Nichita Herascu', bio: ['Born in 2000 in Bucharest, Romania.', 'Resides and works in Bucharest, Romania.'], education: [ { id:1, years:'2021 – 2022', detail:'Photography and Videography, University of Arts Bucharest, Bucharest, Romania' }, { id:2, years:'2019 – 2020', detail:'Advanced Graphic Design, Pixellab, Bucharest, Romania' }, { id:3, years:'2015 – 2019', detail:'Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania' }, ], exhibitions: [ { id:1, year:'2019', detail:'Extravaganzza, group exhibition, Bucharest, Romania' }, { id:2, year:'2019', detail:'Tête-à-Tête 3, group exhibition, Bucharest, Romania' }, { id:3, year:'2018', detail:'MNAC, group exhibition, Bucharest, Romania' }, { id:4, year:'2017', detail:'Tête-à-Tête 2, Artmark, group exhibition, Bucharest, Romania' }, ], studio: 'Str. Theodor Aman 23\n010779\nRomania', email: 'nichitaherascu@gmail.com', };
 
 /* ───────────────────────────────────────── Helpers ───────────────────────────────────────── */ function get(key, def) { var s=localStorage.getItem(key); if(s){try{return JSON.parse(s);}catch(e){}} return JSON.parse(JSON.stringify(def)); } function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
@@ -63,7 +58,7 @@ function removePainting(id) { save('nh_paintings', collectPaintings().filter(fun
 
 function addPainting() { var p=collectPaintings(); p.push({id:nextId(p), src:'', title:'New Painting', year:new Date().getFullYear().toString(), medium:'', description:''}); save('nh_paintings',p); renderPaintings(); var rows=document.querySelectorAll('.painting-row'); var last=rows[rows.length-1]; if(last){ last.scrollIntoView({behavior:'smooth',block:'center'}); var t=last.querySelector('input[data-field="title"]'); if(t) t.select(); } }
 
-/* ───────────────────────────────────────── TEXT TAB ───────────────────────────────────────── */ function renderTextEditor() { var c=getTextContent(); var el=document.getElementById('text-editor'); el.innerHTML= edSection('Introduction','text-intro',c.intro,5)+ edSection('Process','text-process',c.process,4)+ edSection('Place','text-place',c.place,4)+ edSection('Biography','text-biography',c.biography,4);
+/* ───────────────────────────────────────── TEXT TAB ───────────────────────────────────────── */ function renderTextEditor() { var c=getTextContent(); var el=document.getElementById('text-editor'); el.innerHTML= edSection('Introduction','text-intro',c.intro,6)+ edSection('Process','text-process',c.process,4)+ edSection('Place','text-place',c.place,4)+ edSection('Biography','text-biography',c.biography,4);
 
 function edSection(label, id, value, rows) { return ''+label+''+ ''+esc(value)+''; } }
 
@@ -93,11 +88,11 @@ function collectResumeContent() { function entries(listId, yearField) { var r=[]
 
 /* ───────────────────────────────────────── Build HTML for publishing ───────────────────────────────────────── */ function buildPaintingsHTML(paintings) { return paintings.map(function(p){ return ' \n'+ ' \n '; }).join('\n'); }
 
-function buildTextHTML(c) { return [ ' '+esc(c.intro||'')+'', ' Process', ' '+esc(c.process||'')+'', ' Place', ' '+esc(c.place||'')+'', ' Biography', ' '+esc(c.biography||'')+'', ].join('\n'); }
+function buildTextHTML(c) { var out = []; if (c.intro) out.push(' '+esc(c.intro)+''); if (c.process) { out.push(' Process'); out.push(' '+esc(c.process)+''); } if (c.place) { out.push(' Place'); out.push(' '+esc(c.place)+''); } if (c.biography) { out.push(' Biography'); out.push(' '+esc(c.biography)+''); } return out.join('\n'); }
 
 function buildResumeHTML(c) { var h=' \n\n'; h+=' \n'; h+=' '+esc(c.name)+'\n'; (c.bio||[]).forEach(function(b){ h+=' '+esc(b)+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Education\n'; (c.education||[]).forEach(function(e){ h+=' '+esc(e.years||e.year||'')+''+ ''+esc(e.detail||'')+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Selected Exhibitions\n'; (c.exhibitions||[]).forEach(function(e){ h+=' '+esc(e.year||'')+''+ ''+esc(e.detail||'')+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Contact\n'; h+=' Studio'+ ''+esc(c.studio||'').replace(/\n/g,'')+'\n'; h+=' Email'+ ''+esc(c.email||'')+'\n'; h+=' \n\n'; h+=' '; return h; }
 
-function replaceSection(html, startTag, endTag, newContent) { var s=html.indexOf(startTag), e=html.indexOf(endTag)+endTag.length; if(s===-1||e===-1) throw new Error('Markers not found: '+startTag); return html.slice(0,s)+startTag+'\n'+newContent+'\n '+endTag+html.slice(e); }
+function replaceSection(html, startTag, endTag, newContent) { var s=html.indexOf(startTag), eIdx=html.indexOf(endTag); if(s===-1||eIdx===-1) throw new Error('Markers not found: '+startTag); var e=eIdx+endTag.length; return html.slice(0,s)+startTag+'\n'+newContent+'\n '+endTag+html.slice(e); }
 
 /* ───────────────────────────────────────── Publish ───────────────────────────────────────── */ var ghStatus = document.getElementById('gh-status'); var publishBtn = document.getElementById('publish-btn');
 
@@ -118,3 +113,4 @@ fetch(apiUrl,{headers:headers}) .then(function(r){ if(!r.ok) throw new Error('Fe
 function showToast(msg) { var t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){t.classList.add('show');},10); setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},300);},3000); }
 
 })();
+
