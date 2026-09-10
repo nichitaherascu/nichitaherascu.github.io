@@ -1,6 +1,7 @@
-/* ═════════════════════════════════════════
-   LOADER — isolated so nothing can block it
-═════════════════════════════════════════ */
+
+/* =========================================
+   LOADER - isolated so nothing can block it
+========================================= */
 (function () {
   var loader = document.getElementById('loader');
   var fill   = document.querySelector('.loader-name-fill');
@@ -16,7 +17,6 @@
     setTimeout(function () { loader.style.display = 'none'; }, 650);
   }
 
-  /* 1. Start the fill immediately */
   if (fill) {
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
@@ -26,26 +26,21 @@
     });
   }
 
-  /* 2. Normal path */
   window.addEventListener('load', function () { setTimeout(finish, 1400); });
-
-  /* 3. Hard fallback — fires even if `load` never does */
   setTimeout(finish, 2600);
 })();
 
-/* ═════════════════════════════════════════
+/* =========================================
    SITE
-═════════════════════════════════════════ */
+========================================= */
 (function () {
 
-/* ─────────────────────────────────────────
-   i18n — declared first
-───────────────────────────────────────── */
+/* -----------------------------------------
+   i18n
+----------------------------------------- */
 var i18n = {
   en: {
     'nav-paintings':'Paintings','nav-resume':'Resume','nav-text':'Text','nav-contact':'Contact',
-    'resume-bio-1':'Born in 2000 in Bucharest, Romania.',
-    'resume-bio-2':'Resides and works in Bucharest, Romania.',
     'resume-heading-education':'Education',
     'resume-heading-exhibitions':'Selected Exhibitions',
     'resume-heading-contact':'Contact',
@@ -55,11 +50,9 @@ var i18n = {
     'text-heading-biography':'Biography'
   },
   de: {
-    'nav-paintings':'Gemälde','nav-resume':'Lebenslauf','nav-text':'Text','nav-contact':'Kontakt',
-    'resume-bio-1':'Geboren 2000 in Bukarest, Rumänien.',
-    'resume-bio-2':'Lebt und arbeitet in Bukarest, Rumänien.',
+    'nav-paintings':'Gemaelde','nav-resume':'Lebenslauf','nav-text':'Text','nav-contact':'Kontakt',
     'resume-heading-education':'Ausbildung',
-    'resume-heading-exhibitions':'Ausgewählte Ausstellungen',
+    'resume-heading-exhibitions':'Ausgewaehlte Ausstellungen',
     'resume-heading-contact':'Kontakt',
     'resume-studio-label':'Atelier','resume-email-label':'E-Mail',
     'text-heading-process':'Prozess',
@@ -75,9 +68,9 @@ function t(key, fallback) {
   return dict[key] !== undefined ? dict[key] : fallback;
 }
 
-/* ─────────────────────────────────────────
+/* -----------------------------------------
    Utilities
-───────────────────────────────────────── */
+----------------------------------------- */
 function animate(el, fromProps, toProps, duration, callback) {
   if (!el) { if (callback) callback(); return; }
   Object.assign(el.style, fromProps);
@@ -101,9 +94,36 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-/* ─────────────────────────────────────────
-   Overrides — admin localStorage → live page
-───────────────────────────────────────── */
+/* -----------------------------------------
+   Banner override
+----------------------------------------- */
+function applyBannerOverrides() {
+  var stored = localStorage.getItem('nh_banner');
+  if (!stored) return;
+
+  var b;
+  try { b = JSON.parse(stored); } catch (e) { return; }
+  if (!b) return;
+
+  var banner = document.querySelector('#paintings .banner');
+  if (!banner) return;
+
+  banner.setAttribute('data-visible', (b.visible === false || !b.src) ? 'false' : 'true');
+
+  var html = '';
+  if (b.src) html += '<img src="' + escHtml(b.src) + '" alt="" />';
+  if (b.label || b.title) {
+    html += '<div class="banner-text">';
+    if (b.label) html += '<span class="banner-label">' + escHtml(b.label) + '</span>';
+    if (b.title) html += '<span class="banner-title">' + escHtml(b.title) + '</span>';
+    html += '</div>';
+  }
+  banner.innerHTML = html;
+}
+
+/* -----------------------------------------
+   Paintings override
+----------------------------------------- */
 function applyPaintingOverrides() {
   var stored = localStorage.getItem('nh_paintings');
   if (!stored) return;
@@ -127,6 +147,9 @@ function applyPaintingOverrides() {
   }).join('');
 }
 
+/* -----------------------------------------
+   Text override
+----------------------------------------- */
 function applyTextOverrides() {
   var stored = localStorage.getItem('nh_text_content');
   if (!stored) return;
@@ -165,6 +188,9 @@ function applyTextOverrides() {
   if (html) textInner.innerHTML = html;
 }
 
+/* -----------------------------------------
+   Resume override
+----------------------------------------- */
 function applyResumeOverrides() {
   var stored = localStorage.getItem('nh_resume_content');
   if (!stored) return;
@@ -215,14 +241,14 @@ function applyResumeOverrides() {
   }
 }
 
-/* Each guarded independently */
+try { applyBannerOverrides();   } catch (e) { console.warn('banner override failed', e); }
 try { applyPaintingOverrides(); } catch (e) { console.warn('paintings override failed', e); }
 try { applyTextOverrides();     } catch (e) { console.warn('text override failed', e); }
 try { applyResumeOverrides();   } catch (e) { console.warn('resume override failed', e); }
 
-/* ─────────────────────────────────────────
+/* -----------------------------------------
    Top bar / hamburger
-───────────────────────────────────────── */
+----------------------------------------- */
 var asideEl   = document.querySelector('aside');
 var hamburger = document.getElementById('hamburger');
 var mainEl    = document.querySelector('main');
@@ -249,9 +275,9 @@ window.addEventListener('resize', function () {
 window.addEventListener('load', setMainPadding);
 setMainPadding();
 
-/* ─────────────────────────────────────────
+/* -----------------------------------------
    Language switching
-───────────────────────────────────────── */
+----------------------------------------- */
 function applyLanguage(lang) {
   if (!i18n[lang]) return;
   currentLang = lang;
@@ -273,7 +299,6 @@ function applyLanguage(lang) {
   try { applyTextOverrides();   } catch (e) {}
   try { applyResumeOverrides(); } catch (e) {}
 
-  /* Re-translate freshly rebuilt nodes */
   document.querySelectorAll('#text [data-i18n], #resume [data-i18n]').forEach(function (el) {
     var key = el.getAttribute('data-i18n');
     if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
@@ -286,9 +311,9 @@ document.querySelectorAll('.lang-btn').forEach(function (btn) {
   });
 });
 
-/* ─────────────────────────────────────────
+/* -----------------------------------------
    Navigation
-───────────────────────────────────────── */
+----------------------------------------- */
 var navLinks = document.querySelectorAll('nav a[data-target]');
 var current  = null;
 var busy     = false;
@@ -339,9 +364,9 @@ navLinks.forEach(function (link) {
 
 showSection('paintings');
 
-/* ─────────────────────────────────────────
-   Lightbox (delegated — survives rebuilds)
-───────────────────────────────────────── */
+/* -----------------------------------------
+   Lightbox (delegated)
+----------------------------------------- */
 var lightbox = document.getElementById('lightbox');
 
 if (lightbox) {
