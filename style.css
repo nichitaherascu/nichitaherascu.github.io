@@ -1,10 +1,10 @@
-css *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ========================================= RESET ========================================= */ *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
 
-body { background: #fff; color: #000; font-family: 'DM Sans', system-ui, sans-serif; font-size: 18px; font-weight: 400; display: flex; flex-direction: column; /* was row — sidebar is now a top bar */ min-height: 100vh; }
+body { background: #fff; color: #000; font-family: 'DM Sans', system-ui, sans-serif; font-size: 18px; font-weight: 400; display: flex; flex-direction: column; min-height: 100vh; }
 
-/* ──────────────────────────────────────── Loader ──────────────────────────────────────── */ #loader { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+/* ========================================= LOADER ========================================= */ #loader { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; align-items: center; justify-content: center; pointer-events: none; }
 
 .loader-text-wrap { position: relative; display: inline-block; }
 
@@ -14,7 +14,7 @@ body { background: #fff; color: #000; font-family: 'DM Sans', system-ui, sans-se
 
 .loader-name-fill span { font-size: 36px; font-weight: 700; color: #000; white-space: nowrap; display: block; }
 
-/* ──────────────────────────────────────── Top bar (was the left sidebar) ──────────────────────────────────────── */ aside { position: fixed; top: 0; left: 0; width: 100%; height: auto; padding: 1rem 2rem; border-right: none; border-bottom: 1px solid #e0e0e0; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; z-index: 50; background: #fff; }
+/* ========================================= TOP BAR (was the left sidebar) ========================================= */ aside { position: fixed; top: 0; left: 0; width: 100%; height: auto; padding: 1rem 2rem; border-right: none; border-bottom: 1px solid #e0e0e0; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; z-index: 50; background: #fff; }
 
 .name-row { display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; }
 
@@ -26,11 +26,13 @@ body { background: #fff; color: #000; font-family: 'DM Sans', system-ui, sans-se
 
 .aside-menu { display: flex; flex-direction: row; align-items: center; justify-content: flex-end; flex: 1 1 auto; gap: 1.8rem; }
 
-.lang-toggle { display: flex; align-items: center; gap: 0.3rem; order: 2; /* sits to the right of nav */ padding-left: 1.6rem; border-left: 1px solid #e0e0e0; }
+.lang-toggle { display: flex; align-items: center; gap: 0.3rem; order: 2; padding-left: 1.6rem; border-left: 1px solid #e0e0e0; }
 
 .lang-btn { font-size: 13px; font-weight: 400; color: #aaa; cursor: pointer; user-select: none; letter-spacing: 0.04em; transition: color 0.2s ease; }
 
-.lang-btn.active { color: #000; text-decoration: none; } .lang-btn:hover { color: #000; text-decoration: none; }
+.lang-btn.active { color: #000; text-decoration: none; }
+
+.lang-btn:hover { color: #000; text-decoration: none; }
 
 .lang-sep { font-size: 13px; color: #ddd; pointer-events: none; }
 
@@ -38,45 +40,65 @@ nav { display: flex; flex-direction: row; align-items: center; gap: 0.4rem; orde
 
 nav a { color: #000; text-decoration: none; font-size: 14px; font-weight: 400; cursor: pointer; padding: 0.4rem 0.9rem; transition: background 0.2s ease, opacity 0.2s ease; }
 
-nav a:hover { opacity: 1; background: #f5f5f5; } nav a.active { opacity: 1; background: #f0f0f0; } /* the active tab chip */
+nav a:hover { opacity: 1; background: #f5f5f5; }
 
-/* © line — pinned as a footer strip */ .sidebar-bottom { position: fixed; bottom: 0; left: 0; width: 100%; padding: 0.9rem 2rem; font-size: 11px; font-weight: 400; color: #aaa; background: #fff; border-top: 1px solid #e0e0e0; z-index: 40; }
+nav a.active { opacity: 1; background: #f0f0f0; }
 
-/* ──────────────────────────────────────── Main ──────────────────────────────────────── / main { margin-left: 0; flex: 1; width: 100%; padding: 6rem 2rem 5rem; / clears fixed top bar + footer strip */ min-height: 100vh; overflow-y: auto; }
+.sidebar-bottom { position: fixed; bottom: 0; left: 0; width: 100%; padding: 0.9rem 2rem; font-size: 11px; font-weight: 400; color: #aaa; background: #fff; border-top: 1px solid #e0e0e0; z-index: 40; }
+
+/* ========================================= MAIN ========================================= */ main { margin-left: 0; flex: 1; width: 100%; padding: 6rem 2rem 5rem; min-height: 100vh; overflow-y: auto; }
 
 .section { display: none; opacity: 0; }
 
-/* ──────────────────────────────────────── Paintings — catalogue grid ──────────────────────────────────────── */ .paintings-grid { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 0; row-gap: 2.5rem; border-top: 1px solid #000; padding-top: 2.5rem; }
+/* ========================================= PAINTINGS - CATALOGUE GRID ========================================= */ .paintings-grid { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 0; row-gap: 2.5rem; border-top: 1px solid #000; padding-top: 2.5rem; }
 
-.painting-item { display: flex; flex-direction: column; border: 1px solid #e0e0e0; margin-left: -1px; /* collapses doubled vertical borders */ cursor: pointer; background: #fff; transition: border-color 0.2s ease; }
+.painting-item { display: flex; flex-direction: column; border: 1px solid #e0e0e0; margin-left: -1px; cursor: pointer; background: #fff; transition: border-color 0.2s ease; }
 
 .painting-item:hover { border-color: #999; z-index: 2; }
 
-/* Image sits centred in generous white space */ .painting-item img { order: 1; width: 100%; height: 260px; padding: 2.2rem 2rem; object-fit: contain; display: block; background: #fff; transition: opacity 0.25s ease; }
+.painting-item img { order: 1; width: 100%; height: 260px; padding: 2.2rem 2rem; object-fit: contain; display: block; background: #fff; transition: opacity 0.25s ease; }
 
 .painting-item:hover img { opacity: 0.85; }
 
-/* Caption — generated from the existing data-attributes */ .painting-item::before { order: 2; content: attr(data-title); border-top: 1px solid #e0e0e0; padding: 0.85rem 1rem 0.2rem; font-size: 12px; font-weight: 500; line-height: 1.4; color: #000; }
+.painting-item::before { order: 2; content: attr(data-title); border-top: 1px solid #e0e0e0; padding: 0.85rem 1rem 0.2rem; font-size: 12px; font-weight: 500; line-height: 1.4; color: #000; }
 
-.painting-item::after { order: 3; content: attr(data-year) " · " attr(data-medium); padding: 0 1rem 0.9rem; font-size: 12px; font-weight: 400; line-height: 1.4; color: #888; }
+.painting-item::after { order: 3; content: attr(data-year) " \00B7 " attr(data-medium); padding: 0 1rem 0.9rem; font-size: 12px; font-weight: 400; line-height: 1.4; color: #888; }
 
-/* ──────────────────────────────────────── Resume ──────────────────────────────────────── */ .resume-inner { max-width: 560px; display: flex; flex-direction: column; gap: 3rem; } .resume-identity { display: flex; flex-direction: column; gap: 0.3rem; } .resume-name { font-size: 19px; font-weight: 700; margin-bottom: 0.4rem; } .resume-bio { font-size: 18px; color: #555; line-height: 1.6; } .resume-block { display: flex; flex-direction: column; gap: 0.9rem; }
+/* ========================================= RESUME ========================================= */ .resume-inner { max-width: 560px; display: flex; flex-direction: column; gap: 3rem; }
+
+.resume-identity { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.resume-name { font-size: 19px; font-weight: 700; margin-bottom: 0.4rem; }
+
+.resume-bio { font-size: 18px; color: #555; line-height: 1.6; }
+
+.resume-block { display: flex; flex-direction: column; gap: 0.9rem; }
 
 .resume-heading { font-size: 19px; font-weight: 700; padding-bottom: 0.6rem; border-bottom: 1px solid #e0e0e0; }
 
-.resume-entry { display: grid; grid-template-columns: 90px 1fr; gap: 1.5rem; line-height: 1.6; } .resume-year { font-size: 18px; color: #aaa; font-weight: 400; } .resume-detail { font-size: 18px; font-weight: 400; line-height: 1.6; }
+.resume-entry { display: grid; grid-template-columns: 90px 1fr; gap: 1.5rem; line-height: 1.6; }
 
-.resume-link { color: #000; text-decoration: none; border-bottom: 1px solid #000; } .resume-link:hover { opacity: 0.5; }
+.resume-year { font-size: 18px; color: #aaa; font-weight: 400; }
 
-/* ──────────────────────────────────────── Text page ──────────────────────────────────────── */ .text-inner { max-width: 560px; line-height: 1.9; font-size: 18px; } .text-inner p { margin-bottom: 1.5rem; } .text-inner h2 { font-size: 19px; font-weight: 700; margin-bottom: 0.5rem; margin-top: 2rem; }
+.resume-detail { font-size: 18px; font-weight: 400; line-height: 1.6; }
 
-/* ──────────────────────────────────────── Contact ──────────────────────────────────────── */ .contact-inner { display: flex; }
+.resume-link { color: #000; text-decoration: none; border-bottom: 1px solid #000; }
+
+.resume-link:hover { opacity: 0.5; }
+
+/* ========================================= TEXT PAGE ========================================= */ .text-inner { max-width: 560px; line-height: 1.9; font-size: 18px; }
+
+.text-inner p { margin-bottom: 1.5rem; }
+
+.text-inner h2 { font-size: 19px; font-weight: 700; margin-bottom: 0.5rem; margin-top: 2rem; }
+
+/* ========================================= CONTACT ========================================= */ .contact-inner { display: flex; }
 
 .contact-link { color: #000; border-bottom: 1px solid #000; text-decoration: none; font-size: 18px; }
 
 .contact-link:hover { opacity: 0.5; }
 
-/* ──────────────────────────────────────── Lightbox ──────────────────────────────────────── */ #lightbox { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); z-index: 100; align-items: center; justify-content: center; padding: 2.5rem; opacity: 0; }
+/* ========================================= LIGHTBOX ========================================= */ #lightbox { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); z-index: 100; align-items: center; justify-content: center; padding: 2.5rem; opacity: 0; }
 
 .lightbox-inner { display: flex; flex-direction: row; align-items: flex-start; gap: 2.5rem; max-width: 1100px; max-height: 90vh; width: 100%; opacity: 0; transform: scale(0.96); }
 
@@ -88,7 +110,9 @@ nav a:hover { opacity: 1; background: #f5f5f5; } nav a.active { opacity: 1; back
 
 .lightbox-meta { display: flex; flex-direction: column; gap: 0.3rem; }
 
-.meta-title { font-size: 13px; font-weight: 700; color: #fff; } .meta-year, .meta-medium { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.5); }
+.meta-title { font-size: 13px; font-weight: 700; color: #fff; }
+
+.meta-year, .meta-medium { font-size: 13px; font-weight: 400; color: rgba(255, 255, 255, 0.5); }
 
 .lightbox-description { font-size: 13px; font-weight: 400; color: rgba(255, 255, 255, 0.75); line-height: 1.8; display: none; }
 
@@ -96,53 +120,9 @@ nav a:hover { opacity: 1; background: #f5f5f5; } nav a.active { opacity: 1; back
 
 .lightbox-close:hover { color: #fff; }
 
-/* ──────────────────────────────────────── Responsive — Laptop (≤ 1100px) ──────────────────────────────────────── */ @media (max-width: 1100px) { .paintings-grid { grid-template-columns: repeat(3, 1fr); } .painting-item img { height: 230px; padding: 1.8rem 1.6rem; } }
+/* ========================================= RESPONSIVE - LAPTOP (max 1100px) ========================================= */ @media (max-width: 1100px) { .paintings-grid { grid-template-columns: repeat(3, 1fr); } .painting-item img { height: 230px; padding: 1.8rem 1.6rem; } }
 
-/* ──────────────────────────────────────── Responsive — Tablet (≤ 900px) ──────────────────────────────────────── */ @media (max-width: 900px) {
+/* ========================================= RESPONSIVE - TABLET (max 900px) ========================================= */ @media (max-width: 900px) { aside { padding: 0.9rem 1.5rem; gap: 1.2rem; } .name { font-size: 15px; } nav a { font-size: 13px; padding: 0.35rem 0.7rem; } .lang-btn, .lang-sep { font-size: 12px; } .lang-toggle { padding-left: 1.1rem; } .sidebar-bottom { font-size: 10px; padding: 0.8rem 1.5rem; } .resume-heading { font-size: 15px; } .text-inner h2 { font-size: 15px; } main { padding: 5.5rem 1.5rem 4.5rem; } .resume-entry { grid-template-columns: 70px 1fr; gap: 1rem; } .lightbox-text { flex: 0 0 220px; } }
 
-aside { padding: 0.9rem 1.5rem; gap: 1.2rem; } .name { font-size: 15px; } nav a { font-size: 13px; padding: 0.35rem 0.7rem; } .lang-btn, .lang-sep { font-size: 12px; } .lang-toggle { padding-left: 1.1rem; } .sidebar-bottom { font-size: 10px; padding: 0.8rem 1.5rem; } .resume-heading { font-size: 15px; } .text-inner h2 { font-size: 15px; }
-
-main { padding: 5.5rem 1.5rem 4.5rem; }
-
-.resume-entry { grid-template-columns: 70px 1fr; gap: 1rem; }
-
-.lightbox-text { flex: 0 0 220px; }
-
-}
-
-/* ──────────────────────────────────────── Responsive — Mobile (≤ 640px) ──────────────────────────────────────── */ @media (max-width: 640px) {
-
-aside { position: fixed; width: 100%; height: auto; padding: 1.2rem 1.5rem; border-right: none; border-bottom: 1px solid #e0e0e0; flex-direction: column; align-items: stretch; gap: 0; overflow: hidden; }
-
-.name-row { padding-bottom: 0; } .name { font-size: 16px; } .hamburger { display: flex; }
-
-aside.menu-open .hamburger span:first-child { transform: rotate(45deg) translate(0px, 7.5px); } aside.menu-open .hamburger span:last-child { transform: rotate(-45deg) translate(0px, -7.5px); }
-
-.aside-menu { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 1.2rem; padding-top: 0; }
-
-aside.menu-open .aside-menu { max-height: 400px; padding-top: 1.4rem; }
-
-nav { flex-direction: column; align-items: flex-start; gap: 0.6rem; order: 1; } nav a { font-size: 16px; padding: 0.2rem 0; background: none; } nav a.active { background: none; opacity: 0.5; } .lang-toggle { order: 2; padding-left: 0; border-left: none; } .lang-btn, .lang-sep { font-size: 15px; }
-
-main { padding: 1.5rem 1.2rem 4rem; padding-top: calc(52px + 1.5rem); }
-
-/* Two-up catalogue grid on mobile */ .paintings-grid { grid-template-columns: repeat(2, 1fr); row-gap: 1.5rem; padding-top: 1.5rem; }
-
-.painting-item img { height: 170px; padding: 1.1rem 1rem; } .painting-item::before { font-size: 11px; padding: 0.7rem 0.7rem 0.15rem; } .painting-item::after { font-size: 11px; padding: 0 0.7rem 0.7rem; }
-
-.resume-inner { max-width: 100%; } .resume-entry { grid-template-columns: 70px 1fr; gap: 0.8rem; } .resume-year { font-size: 14px; } .resume-detail { font-size: 16px; } .resume-bio { font-size: 16px; } .text-inner { font-size: 16px; max-width: 100%; } .text-inner h2 { font-size: 17px; }
-
-/* Lightbox — column on mobile */ #lightbox { padding: 1.2rem; overflow-y: auto; align-items: flex-start; }
-
-.lightbox-inner { flex-direction: column; align-items: stretch; max-height: none; gap: 1.2rem; }
-
-.lightbox-img-wrap { max-height: 60vh; justify-content: center; }
-
-.lightbox-img-wrap img { max-height: 60vh; max-width: 100%; }
-
-.lightbox-text { flex: none; width: 100%; max-height: none; overflow-y: visible; }
-
-.lightbox-close { top: 1rem; right: 1rem; }
-
-}
+/* ========================================= RESPONSIVE - MOBILE (max 640px) ========================================= */ @media (max-width: 640px) { aside { position: fixed; width: 100%; height: auto; padding: 1.2rem 1.5rem; border-right: none; border-bottom: 1px solid #e0e0e0; flex-direction: column; align-items: stretch; gap: 0; overflow: hidden; } .name-row { padding-bottom: 0; } .name { font-size: 16px; } .hamburger { display: flex; } aside.menu-open .hamburger span:first-child { transform: rotate(45deg) translate(0px, 7.5px); } aside.menu-open .hamburger span:last-child { transform: rotate(-45deg) translate(0px, -7.5px); } .aside-menu { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 1.2rem; padding-top: 0; } aside.menu-open .aside-menu { max-height: 400px; padding-top: 1.4rem; } nav { flex-direction: column; align-items: flex-start; gap: 0.6rem; order: 1; } nav a { font-size: 16px; padding: 0.2rem 0; background: none; } nav a.active { background: none; opacity: 0.5; } .lang-toggle { order: 2; padding-left: 0; border-left: none; } .lang-btn, .lang-sep { font-size: 15px; } main { padding: 1.5rem 1.2rem 4rem; padding-top: calc(52px + 1.5rem); } .paintings-grid { grid-template-columns: repeat(2, 1fr); row-gap: 1.5rem; padding-top: 1.5rem; } .painting-item img { height: 170px; padding: 1.1rem 1rem; } .painting-item::before { font-size: 11px; padding: 0.7rem 0.7rem 0.15rem; } .painting-item::after { font-size: 11px; padding: 0 0.7rem 0.7rem; } .resume-inner { max-width: 100%; } .resume-entry { grid-template-columns: 70px 1fr; gap: 0.8rem; } .resume-year { font-size: 14px; } .resume-detail { font-size: 16px; } .resume-bio { font-size: 16px; } .text-inner { font-size: 16px; max-width: 100%; } .text-inner h2 { font-size: 17px; } #lightbox { padding: 1.2rem; overflow-y: auto; align-items: flex-start; } .lightbox-inner { flex-direction: column; align-items: stretch; max-height: none; gap: 1.2rem; } .lightbox-img-wrap { max-height: 60vh; justify-content: center; } .lightbox-img-wrap img { max-height: 60vh; max-width: 100%; } .lightbox-text { flex: none; width: 100%; max-height: none; overflow-y: visible; } .lightbox-close { top: 1rem; right: 1rem; } }
 
