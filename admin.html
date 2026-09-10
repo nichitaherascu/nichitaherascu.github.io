@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Nichita Herascu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,6 +25,7 @@
   /* ── Inputs & textareas ── */
   input[type="password"],
   input[type="text"],
+  input[type="file"],
   textarea {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 15px;
@@ -202,7 +201,7 @@
 <div id="login-screen">
   <div class="login-box">
     <p class="login-title">Admin</p>
-    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" />
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
     <button id="login-btn" class="btn-primary">Enter</button>
     <p class="login-error" id="login-error"></p>
   </div>
@@ -215,7 +214,7 @@
     <span class="admin-title" id="admin-tab-title">Paintings</span>
     <div class="admin-actions">
       <button id="publish-btn" class="btn-primary">Publish to live site ↑</button>
-      <button id="logout-btn"  class="btn-ghost">Logout</button>
+      <button id="logout-btn" class="btn-ghost">Logout</button>
     </div>
   </header>
 
@@ -223,15 +222,15 @@
   <div class="github-settings">
     <div class="field-group">
       <label>GitHub Token</label>
-      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" />
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
     </div>
     <div class="field-group">
       <label>Owner</label>
-      <input type="text" id="gh-owner" placeholder="nichitaherascu" />
+      <input type="text" id="gh-owner" placeholder="nichitaherascu">
     </div>
     <div class="field-group">
       <label>Repository</label>
-      <input type="text" id="gh-repo" placeholder="nichitaherascu.github.io" />
+      <input type="text" id="gh-repo" placeholder="nichitaherascu.github.io">
     </div>
     <button id="save-gh-btn" class="btn-secondary">Save settings</button>
     <span id="gh-status" class="gh-status"></span>
@@ -262,5 +261,5 @@
 </div>
 
 <script src="admin.js"></script>
-</body>
-</html>
+
+</body></html>
