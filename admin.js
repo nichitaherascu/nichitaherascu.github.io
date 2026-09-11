@@ -1,116 +1,785 @@
-javascript (function () {
+(function () {
 
-/* ───────────────────────────────────────── PASSWORD (default: "admin") To change — run in browser console: crypto.subtle.digest('SHA-256', new TextEncoder().encode('newpassword')) .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''))) Paste result as PASSWORD_HASH. ───────────────────────────────────────── */ var PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
+/* =========================================
+   PASSWORD  (default: "admin")
+   To change, run in browser console:
+     crypto.subtle.digest('SHA-256', new TextEncoder().encode('newpassword'))
+       .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+   Paste the result as PASSWORD_HASH.
+========================================= */
+var PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
 
-/* ───────────────────────────────────────── Default data ───────────────────────────────────────── */ var defaultPaintings = [ { id:1, src:'images/painting-1.jpg', title:'Good Soul', year:'2025', medium:'Oil on Jute', description:'' }, { id:2, src:'images/painting-2.jpg', title:'Peeking Yeshua', year:'2026', medium:'Oil on linen', description:'' }, { id:3, src:'images/painting-3.jpg', title:'Uncle', year:'2025', medium:'Oil on canvas',description:'' }, { id:4, src:'images/painting-4.jpg', title:'Doxa', year:'2026', medium:'Oil on Linen', description:'' }, { id:5, src:'images/painting-5.jpg', title:'Orpheus', year:'2026', medium:'Oil on Linen', description:'' }, ];
+/* =========================================
+   Default data
+========================================= */
+var defaultPaintings = [
+  { id:1, src:'images/painting-1.jpg', title:'Good Soul',      year:'2025', medium:'Oil on Jute',   description:'' },
+  { id:2, src:'images/painting-2.jpg', title:'Peeking Yeshua', year:'2026', medium:'Oil on linen',  description:'' },
+  { id:3, src:'images/painting-3.jpg', title:'Uncle',          year:'2025', medium:'Oil on canvas', description:'' },
+  { id:4, src:'images/painting-4.jpg', title:'Doxa',           year:'2026', medium:'Oil on Linen',  description:'' },
+  { id:5, src:'images/painting-5.jpg', title:'Orpheus',        year:'2026', medium:'Oil on Linen',  description:'' }
+];
 
-var defaultTextContent = { intro: 'Born in Bucharest in 2000, Nichita works in oil paint and in sound.', process: '', place: '', biography: '', };
+var defaultBanner = {
+  src:     'images/banner.jpg',
+  label:   'Next',
+  title:   'New body of work, 2026',
+  visible: true
+};
 
-var defaultResumeContent = { name: 'Nichita Herascu', bio: ['Born in 2000 in Bucharest, Romania.', 'Resides and works in Bucharest, Romania.'], education: [ { id:1, years:'2021 – 2022', detail:'Photography and Videography, University of Arts Bucharest, Bucharest, Romania' }, { id:2, years:'2019 – 2020', detail:'Advanced Graphic Design, Pixellab, Bucharest, Romania' }, { id:3, years:'2015 – 2019', detail:'Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania' }, ], exhibitions: [ { id:1, year:'2019', detail:'Extravaganzza, group exhibition, Bucharest, Romania' }, { id:2, year:'2019', detail:'Tête-à-Tête 3, group exhibition, Bucharest, Romania' }, { id:3, year:'2018', detail:'MNAC, group exhibition, Bucharest, Romania' }, { id:4, year:'2017', detail:'Tête-à-Tête 2, Artmark, group exhibition, Bucharest, Romania' }, ], studio: 'Str. Theodor Aman 23\n010779\nRomania', email: 'nichitaherascu@gmail.com', };
+var defaultTextContent = {
+  intro:     'Born in Bucharest in 2000, Nichita works in oil paint and in sound.',
+  process:   '',
+  place:     '',
+  biography: ''
+};
 
-/* ───────────────────────────────────────── Helpers ───────────────────────────────────────── */ function get(key, def) { var s=localStorage.getItem(key); if(s){try{return JSON.parse(s);}catch(e){}} return JSON.parse(JSON.stringify(def)); } function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+var defaultResumeContent = {
+  name: 'Nichita Herascu',
+  bio:  ['Born in 2000 in Bucharest, Romania.', 'Resides and works in Bucharest, Romania.'],
+  education: [
+    { id:1, years:'2021 - 2022', detail:'Photography and Videography, University of Arts Bucharest, Bucharest, Romania' },
+    { id:2, years:'2019 - 2020', detail:'Advanced Graphic Design, Pixellab, Bucharest, Romania' },
+    { id:3, years:'2015 - 2019', detail:'Industrial & Product Design, Nicolae Tonitza Art Highschool, Bucharest, Romania' }
+  ],
+  exhibitions: [
+    { id:1, year:'2019', detail:'Extravaganzza, group exhibition, Bucharest, Romania' },
+    { id:2, year:'2019', detail:'Tete-a-Tete 3, group exhibition, Bucharest, Romania' },
+    { id:3, year:'2018', detail:'MNAC, group exhibition, Bucharest, Romania' },
+    { id:4, year:'2017', detail:'Tete-a-Tete 2, Artmark, group exhibition, Bucharest, Romania' }
+  ],
+  studio: 'Str. Theodor Aman 23\n010779\nRomania',
+  email:  'nichitaherascu@gmail.com'
+};
 
-function getPaintings() { return get('nh_paintings', defaultPaintings); } function getTextContent() { return get('nh_text_content', defaultTextContent); } function getResumeContent() { return get('nh_resume_content', defaultResumeContent); }
+/* =========================================
+   Helpers
+========================================= */
+function get(key, def) {
+  var s = localStorage.getItem(key);
+  if (s) { try { return JSON.parse(s); } catch (e) {} }
+  return JSON.parse(JSON.stringify(def));
+}
 
-function hashPassword(pw) { return crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw)) .then(function(buf){ return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }); }
+function save(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
 
-function esc(str) { return String(str||'').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); } function attr(str) { return String(str||'').replace(/&/g,'&').replace(/"/g,'"'); } function toB64(s) { return btoa(unescape(encodeURIComponent(s))); } function frB64(s) { return decodeURIComponent(escape(atob(s))); } function nextId(arr){ return arr.length ? Math.max.apply(null,arr.map(function(x){return x.id;})) + 1 : 1; }
+function getPaintings()     { return get('nh_paintings',      defaultPaintings); }
+function getBanner()        { return get('nh_banner',         defaultBanner); }
+function getTextContent()   { return get('nh_text_content',   defaultTextContent); }
+function getResumeContent() { return get('nh_resume_content', defaultResumeContent); }
 
-function detectGitHub() { var h = window.location.hostname; if (!h.endsWith('.github.io')) return null; var owner = h.replace('.github.io',''); var parts = window.location.pathname.replace(/^//,'').split('/'); return { owner:owner, repo:(parts[0]&&parts[0]!=='admin.html') ? parts[0] : owner+'.github.io' }; }
+function hashPassword(pw) {
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw))
+    .then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+}
 
-/* ───────────────────────────────────────── Session + Login ───────────────────────────────────────── */ var loginScreen = document.getElementById('login-screen'); var adminPanel = document.getElementById('admin-panel'); var pwInput = document.getElementById('password-input'); var loginError = document.getElementById('login-error');
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
-function enterAdmin() { sessionStorage.setItem('nh_admin','1'); loginScreen.style.display = 'none'; adminPanel.style.display = 'block'; loadGitHubSettings(); renderPaintings(); renderTextEditor(); renderResumeEditor(); }
+function attr(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;');
+}
+
+function toB64(s) { return btoa(unescape(encodeURIComponent(s))); }
+function frB64(s) { return decodeURIComponent(escape(atob(s))); }
+
+function nextId(arr) {
+  return arr.length ? Math.max.apply(null, arr.map(function (x) { return x.id; })) + 1 : 1;
+}
+
+function detectGitHub() {
+  var h = window.location.hostname;
+  if (h.indexOf('.github.io') === -1) return null;
+  var owner = h.replace('.github.io', '');
+  var parts = window.location.pathname.replace(/^\//, '').split('/');
+  return {
+    owner: owner,
+    repo: (parts[0] && parts[0] !== 'admin.html') ? parts[0] : owner + '.github.io'
+  };
+}
+
+/* =========================================
+   Session + Login
+========================================= */
+var loginScreen = document.getElementById('login-screen');
+var adminPanel  = document.getElementById('admin-panel');
+var pwInput     = document.getElementById('password-input');
+var loginError  = document.getElementById('login-error');
+
+function enterAdmin() {
+  sessionStorage.setItem('nh_admin', '1');
+  loginScreen.style.display = 'none';
+  adminPanel.style.display  = 'block';
+  loadGitHubSettings();
+  renderPaintings();
+  renderBannerEditor();
+  renderTextEditor();
+  renderResumeEditor();
+}
 
 if (sessionStorage.getItem('nh_admin') === '1') enterAdmin();
 
-document.getElementById('login-btn').addEventListener('click', function() { loginError.textContent = ''; hashPassword(pwInput.value).then(function(hash) { if (hash === PASSWORD_HASH) { enterAdmin(); } else { loginError.textContent = 'Incorrect password.'; pwInput.value=''; pwInput.focus(); } }); });
+document.getElementById('login-btn').addEventListener('click', function () {
+  loginError.textContent = '';
+  hashPassword(pwInput.value).then(function (hash) {
+    if (hash === PASSWORD_HASH) {
+      enterAdmin();
+    } else {
+      loginError.textContent = 'Incorrect password.';
+      pwInput.value = '';
+      pwInput.focus();
+    }
+  });
+});
 
-pwInput.addEventListener('keydown', function(e) { if (e.key==='Enter') document.getElementById('login-btn').click(); loginError.textContent = ''; });
+pwInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+  loginError.textContent = '';
+});
 
-/* ───────────────────────────────────────── GitHub settings ───────────────────────────────────────── */ function loadGitHubSettings() { var s=JSON.parse(localStorage.getItem('nh_gh_settings')||'{}'), a=detectGitHub(); document.getElementById('gh-token').value = s.token||''; document.getElementById('gh-owner').value = s.owner||(a&&a.owner)||''; document.getElementById('gh-repo').value = s.repo ||(a&&a.repo) ||''; }
+/* =========================================
+   GitHub settings
+========================================= */
+function loadGitHubSettings() {
+  var s = JSON.parse(localStorage.getItem('nh_gh_settings') || '{}');
+  var a = detectGitHub();
+  document.getElementById('gh-token').value = s.token || '';
+  document.getElementById('gh-owner').value = s.owner || (a && a.owner) || '';
+  document.getElementById('gh-repo').value  = s.repo  || (a && a.repo)  || '';
+}
 
-document.getElementById('save-gh-btn').addEventListener('click', function() { localStorage.setItem('nh_gh_settings', JSON.stringify({ token: document.getElementById('gh-token').value.trim(), owner: document.getElementById('gh-owner').value.trim(), repo: document.getElementById('gh-repo').value.trim(), })); showToast('Settings saved ✓'); });
+document.getElementById('save-gh-btn').addEventListener('click', function () {
+  localStorage.setItem('nh_gh_settings', JSON.stringify({
+    token: document.getElementById('gh-token').value.trim(),
+    owner: document.getElementById('gh-owner').value.trim(),
+    repo:  document.getElementById('gh-repo').value.trim()
+  }));
+  showToast('Settings saved');
+});
 
-/* ───────────────────────────────────────── Tab switching ───────────────────────────────────────── */ var tabTitles = { paintings:'Paintings', text:'Text', resume:'Resume' };
+/* =========================================
+   Tab switching
+========================================= */
+var tabTitles = { paintings: 'Paintings', banner: 'Banner', text: 'Text', resume: 'Resume' };
 
-document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.addEventListener('click', function() { document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); }); document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); }); btn.classList.add('active'); document.getElementById('tab-'+btn.getAttribute('data-tab')).classList.add('active'); document.getElementById('admin-tab-title').textContent = tabTitles[btn.getAttribute('data-tab')]; }); });
+document.querySelectorAll('.tab-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.getAttribute('data-tab')).classList.add('active');
+    document.getElementById('admin-tab-title').textContent = tabTitles[btn.getAttribute('data-tab')];
+  });
+});
 
-/* ───────────────────────────────────────── PAINTINGS TAB ───────────────────────────────────────── */ function collectPaintings() { var paintings=getPaintings(), result=[]; document.querySelectorAll('.painting-row').forEach(function(row) { var id=parseInt(row.getAttribute('data-id')); var p=paintings.find(function(x){return x.id===id;})||{id:id}; row.querySelectorAll('[data-field]').forEach(function(el){ p[el.getAttribute('data-field')]=el.value; }); result.push(p); }); return result; }
+/* =========================================
+   PAINTINGS TAB
+========================================= */
+function collectPaintings() {
+  var paintings = getPaintings();
+  var result = [];
+  document.querySelectorAll('.painting-row').forEach(function (row) {
+    var id = parseInt(row.getAttribute('data-id'), 10);
+    var p = paintings.find(function (x) { return x.id === id; }) || { id: id };
+    row.querySelectorAll('[data-field]').forEach(function (el) {
+      p[el.getAttribute('data-field')] = el.value;
+    });
+    result.push(p);
+  });
+  return result;
+}
 
-function inputField(label, name, id, value, full) { return ''+label+''+ ''; }
+function inputField(label, name, id, value, full) {
+  var cls = full ? 'field-group full' : 'field-group';
+  return '<div class="' + cls + '">' +
+           '<label>' + label + '</label>' +
+           '<input type="text" data-field="' + name + '" data-id="' + id + '" value="' + attr(value || '') + '" />' +
+         '</div>';
+}
 
-function textareaField(label, name, id, value) { return ''+label+''+ ''+esc(value||'')+''; }
+function textareaField(label, name, id, value) {
+  return '<div class="field-group full">' +
+           '<label>' + label + '</label>' +
+           '<textarea data-field="' + name + '" data-id="' + id + '" rows="3">' + esc(value || '') + '</textarea>' +
+         '</div>';
+}
 
-function renderPaintings() { var list=document.getElementById('paintings-list'); var paintings=getPaintings(); list.innerHTML='';
+function renderPaintings() {
+  var list = document.getElementById('paintings-list');
+  var paintings = getPaintings();
+  list.innerHTML = '';
 
-paintings.forEach(function(p, idx) { var row=document.createElement('div'); row.className='painting-row'; row.setAttribute('data-id', p.id); row.innerHTML= ''+ ''+ inputField('Title','title',p.id,p.title)+ inputField('Year','year',p.id,p.year)+ inputField('Medium','medium',p.id,p.medium)+ inputField('Image path','src',p.id,p.src,true)+ textareaField('Description','description',p.id,p.description)+ ''+ '<button class="btn-move btn-up" data-id="'+p.id+'"'+(idx===0?' disabled':'')+'>↑'+ '<button class="btn-move btn-down" data-id="'+p.id+'"'+(idx===paintings.length-1?' disabled':'')+'>↓'+ 'Remove'+ ''+ ''; list.appendChild(row);
+  paintings.forEach(function (p, idx) {
+    var row = document.createElement('div');
+    row.className = 'painting-row';
+    row.setAttribute('data-id', p.id);
 
-row.querySelector('input[data-field="src"]').addEventListener('change', function() { row.querySelector('.painting-thumb img').src = this.value; }); });
+    var upDisabled   = (idx === 0) ? ' disabled' : '';
+    var downDisabled = (idx === paintings.length - 1) ? ' disabled' : '';
 
-list.querySelectorAll('.btn-up').forEach(function(b){ b.addEventListener('click', function(){ movePainting(parseInt(b.getAttribute('data-id')),-1); }); }); list.querySelectorAll('.btn-down').forEach(function(b){ b.addEventListener('click', function(){ movePainting(parseInt(b.getAttribute('data-id')),1); }); }); list.querySelectorAll('.btn-remove').forEach(function(b){ b.addEventListener('click', function(){ if(confirm('Remove this painting?')) removePainting(parseInt(b.getAttribute('data-id'))); }); });
+    row.innerHTML =
+      '<div class="painting-thumb">' +
+        '<img src="' + attr(p.src || '') + '" alt="" />' +
+      '</div>' +
+      '<div class="painting-fields">' +
+        inputField('Title', 'title', p.id, p.title) +
+        inputField('Year', 'year', p.id, p.year) +
+        inputField('Medium', 'medium', p.id, p.medium) +
+        inputField('Image path', 'src', p.id, p.src, true) +
+        textareaField('Description', 'description', p.id, p.description) +
+        '<div class="row-actions full">' +
+          '<button class="btn-move btn-up" data-id="' + p.id + '"' + upDisabled + '>Up</button>' +
+          '<button class="btn-move btn-down" data-id="' + p.id + '"' + downDisabled + '>Down</button>' +
+          '<button class="btn-remove" data-id="' + p.id + '">Remove</button>' +
+        '</div>' +
+      '</div>';
 
-var addBtn=document.createElement('button'); addBtn.className='add-row-btn'; addBtn.textContent='+ Add painting'; addBtn.addEventListener('click', addPainting); list.appendChild(addBtn); }
+    list.appendChild(row);
 
-function movePainting(id, dir) { var p=collectPaintings(), i=p.findIndex(function(x){return x.id===id;}), t=i+dir; if(t<0||t>=p.length) return; var tmp=p[i]; p[i]=p[t]; p[t]=tmp; save('nh_paintings',p); renderPaintings(); }
+    row.querySelector('input[data-field="src"]').addEventListener('change', function () {
+      row.querySelector('.painting-thumb img').src = this.value;
+    });
+  });
 
-function removePainting(id) { save('nh_paintings', collectPaintings().filter(function(p){return p.id!==id;})); renderPaintings(); }
+  list.querySelectorAll('.btn-up').forEach(function (b) {
+    b.addEventListener('click', function () {
+      movePainting(parseInt(b.getAttribute('data-id'), 10), -1);
+    });
+  });
 
-function addPainting() { var p=collectPaintings(); p.push({id:nextId(p), src:'', title:'New Painting', year:new Date().getFullYear().toString(), medium:'', description:''}); save('nh_paintings',p); renderPaintings(); var rows=document.querySelectorAll('.painting-row'); var last=rows[rows.length-1]; if(last){ last.scrollIntoView({behavior:'smooth',block:'center'}); var t=last.querySelector('input[data-field="title"]'); if(t) t.select(); } }
+  list.querySelectorAll('.btn-down').forEach(function (b) {
+    b.addEventListener('click', function () {
+      movePainting(parseInt(b.getAttribute('data-id'), 10), 1);
+    });
+  });
 
-/* ───────────────────────────────────────── TEXT TAB ───────────────────────────────────────── */ function renderTextEditor() { var c=getTextContent(); var el=document.getElementById('text-editor'); el.innerHTML= edSection('Introduction','text-intro',c.intro,6)+ edSection('Process','text-process',c.process,4)+ edSection('Place','text-place',c.place,4)+ edSection('Biography','text-biography',c.biography,4);
+  list.querySelectorAll('.btn-remove').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (confirm('Remove this painting?')) {
+        removePainting(parseInt(b.getAttribute('data-id'), 10));
+      }
+    });
+  });
 
-function edSection(label, id, value, rows) { return ''+label+''+ ''+esc(value)+''; } }
+  var addBtn = document.createElement('button');
+  addBtn.className = 'add-row-btn';
+  addBtn.textContent = '+ Add painting';
+  addBtn.addEventListener('click', addPainting);
+  list.appendChild(addBtn);
+}
 
-function collectTextContent() { return { intro: document.getElementById('text-intro').value, process: document.getElementById('text-process').value, place: document.getElementById('text-place').value, biography: document.getElementById('text-biography').value, }; }
+function movePainting(id, dir) {
+  var p = collectPaintings();
+  var i = p.findIndex(function (x) { return x.id === id; });
+  var target = i + dir;
+  if (target < 0 || target >= p.length) return;
+  var tmp = p[i];
+  p[i] = p[target];
+  p[target] = tmp;
+  save('nh_paintings', p);
+  renderPaintings();
+}
 
-/* ───────────────────────────────────────── RESUME TAB ───────────────────────────────────────── */ function renderResumeEditor() { var c=getResumeContent(); var el=document.getElementById('resume-editor'); el.innerHTML='';
+function removePainting(id) {
+  save('nh_paintings', collectPaintings().filter(function (p) { return p.id !== id; }));
+  renderPaintings();
+}
 
-/* Identity */ var identity=mkDiv('editor-block'); identity.innerHTML='Identity'; identity.appendChild(labeledInput('Name','resume-name',c.name)); identity.appendChild(labeledInput('Bio line 1','resume-bio-0',c.bio[0]||'')); identity.appendChild(labeledInput('Bio line 2','resume-bio-1',c.bio[1]||'')); el.appendChild(identity);
+function addPainting() {
+  var p = collectPaintings();
+  p.push({
+    id: nextId(p),
+    src: '',
+    title: 'New Painting',
+    year: new Date().getFullYear().toString(),
+    medium: '',
+    description: ''
+  });
+  save('nh_paintings', p);
+  renderPaintings();
 
-/* Education */ el.appendChild(entryBlock('Education','education-entries',c.education,'years'));
+  var rows = document.querySelectorAll('.painting-row');
+  var last = rows[rows.length - 1];
+  if (last) {
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var titleInput = last.querySelector('input[data-field="title"]');
+    if (titleInput) titleInput.select();
+  }
+}
 
-/* Exhibitions */ el.appendChild(entryBlock('Selected Exhibitions','exhibition-entries',c.exhibitions,'year'));
+/* =========================================
+   BANNER TAB
+========================================= */
+function renderBannerEditor() {
+  var b = getBanner();
+  var el = document.getElementById('banner-editor');
+  var checked = (b.visible === false) ? '' : ' checked';
 
-/* Contact */ var contact=mkDiv('editor-block'); contact.innerHTML='Contact'; contact.appendChild(labeledTextarea('Studio address','resume-studio',c.studio,3)); contact.appendChild(labeledInput('Email','resume-email',c.email)); el.appendChild(contact); }
+  el.innerHTML =
+    '<div class="editor-section">' +
+      '<h3>Preview</h3>' +
+      '<img class="banner-preview" id="banner-preview" src="' + attr(b.src || '') + '" alt="" />' +
+    '</div>' +
+    '<div class="editor-section">' +
+      '<h3>Image path</h3>' +
+      '<input type="text" id="banner-src" value="' + attr(b.src || '') + '" placeholder="images/banner.jpg" />' +
+      '<p class="editor-hint">Upload the file to your repo images folder, then enter the path here. A wide image works best, about 2400 x 1000 px.</p>' +
+    '</div>' +
+    '<div class="editor-section">' +
+      '<h3>Label</h3>' +
+      '<input type="text" id="banner-label" value="' + attr(b.label || '') + '" placeholder="Next" />' +
+      '<p class="editor-hint">Small uppercase line above the title. Leave empty to hide.</p>' +
+    '</div>' +
+    '<div class="editor-section">' +
+      '<h3>Title</h3>' +
+      '<input type="text" id="banner-title" value="' + attr(b.title || '') + '" placeholder="New body of work, 2026" />' +
+      '<p class="editor-hint">Leave empty to show the image with no text overlay.</p>' +
+    '</div>' +
+    '<div class="editor-section">' +
+      '<h3>Visibility</h3>' +
+      '<div class="editor-check">' +
+        '<input type="checkbox" id="banner-visible"' + checked + ' />' +
+        '<label for="banner-visible">Show banner on the Paintings page</label>' +
+      '</div>' +
+    '</div>';
 
-function mkDiv(cls) { var d=document.createElement('div'); d.className=cls; return d; }
+  document.getElementById('banner-src').addEventListener('input', function () {
+    document.getElementById('banner-preview').src = this.value;
+  });
+}
 
-function labeledInput(label, id, value) { var w=mkDiv('editor-section'); w.innerHTML=''+label+''; return w; }
+function collectBanner() {
+  var srcEl     = document.getElementById('banner-src');
+  var labelEl   = document.getElementById('banner-label');
+  var titleEl   = document.getElementById('banner-title');
+  var visibleEl = document.getElementById('banner-visible');
+  return {
+    src:     srcEl     ? srcEl.value.trim()   : '',
+    label:   labelEl   ? labelEl.value.trim() : '',
+    title:   titleEl   ? titleEl.value.trim() : '',
+    visible: visibleEl ? visibleEl.checked    : true
+  };
+}
 
-function labeledTextarea(label, id, value, rows) { var w=mkDiv('editor-section'); w.innerHTML=''+label+''+esc(value)+''; return w; }
+/* =========================================
+   TEXT TAB
+========================================= */
+function renderTextEditor() {
+  var c = getTextContent();
+  var el = document.getElementById('text-editor');
 
-function entryBlock(title, listId, entries, yearField) { var block=mkDiv('editor-block'); var h=document.createElement('h3'); h.textContent=title; block.appendChild(h); var list=mkDiv('entry-list'); list.id=listId; block.appendChild(list); entries.forEach(function(e){ list.appendChild(entryRow(e, yearField)); }); var addBtn=document.createElement('button'); addBtn.className='add-entry-btn'; addBtn.textContent='+ Add entry'; addBtn.addEventListener('click', function(){ var ne={id:Date.now()}; ne[yearField]=''; ne.detail=''; list.appendChild(entryRow(ne, yearField)); }); block.appendChild(addBtn); return block; }
+  function edSection(label, id, value, rows) {
+    return '<div class="editor-section">' +
+             '<h3>' + label + '</h3>' +
+             '<textarea id="' + id + '" rows="' + rows + '">' + esc(value) + '</textarea>' +
+           '</div>';
+  }
 
-function entryRow(entry, yearField) { var row=mkDiv('entry-row'); row.setAttribute('data-id', entry.id); var yr=document.createElement('input'); yr.type='text'; yr.value=entry[yearField]||''; yr.placeholder=yearField==='years'?'2021 – 2022':'2024'; yr.setAttribute('data-year-field', yearField); var det=document.createElement('input'); det.type='text'; det.value=entry.detail||''; det.placeholder='Detail'; var rm=document.createElement('button'); rm.className='btn-remove-entry'; rm.textContent='✕'; rm.addEventListener('click', function(){ row.remove(); }); row.appendChild(yr); row.appendChild(det); row.appendChild(rm); return row; }
+  el.innerHTML =
+    edSection('Introduction', 'text-intro', c.intro, 6) +
+    edSection('Process', 'text-process', c.process, 4) +
+    edSection('Place', 'text-place', c.place, 4) +
+    edSection('Biography', 'text-biography', c.biography, 4);
+}
 
-function collectResumeContent() { function entries(listId, yearField) { var r=[]; document.querySelectorAll('#'+listId+' .entry-row').forEach(function(row){ var inputs=row.querySelectorAll('input'); var e={id:parseInt(row.getAttribute('data-id'))||Date.now(), detail:inputs[1]?inputs[1].value:''}; e[yearField]=inputs[0]?inputs[0].value:''; r.push(e); }); return r; } return { name: (document.getElementById('resume-name')||{}).value||'', bio: [(document.getElementById('resume-bio-0')||{}).value||'',(document.getElementById('resume-bio-1')||{}).value||''], education: entries('education-entries','years'), exhibitions: entries('exhibition-entries','year'), studio: (document.getElementById('resume-studio')||{}).value||'', email: (document.getElementById('resume-email') ||{}).value||'', }; }
+function collectTextContent() {
+  return {
+    intro:     document.getElementById('text-intro').value,
+    process:   document.getElementById('text-process').value,
+    place:     document.getElementById('text-place').value,
+    biography: document.getElementById('text-biography').value
+  };
+}
 
-/* ───────────────────────────────────────── Build HTML for publishing ───────────────────────────────────────── */ function buildPaintingsHTML(paintings) { return paintings.map(function(p){ return ' \n'+ ' \n '; }).join('\n'); }
+/* =========================================
+   RESUME TAB
+========================================= */
+function renderResumeEditor() {
+  var c = getResumeContent();
+  var el = document.getElementById('resume-editor');
+  el.innerHTML = '';
 
-function buildTextHTML(c) { var out = []; if (c.intro) out.push(' '+esc(c.intro)+''); if (c.process) { out.push(' Process'); out.push(' '+esc(c.process)+''); } if (c.place) { out.push(' Place'); out.push(' '+esc(c.place)+''); } if (c.biography) { out.push(' Biography'); out.push(' '+esc(c.biography)+''); } return out.join('\n'); }
+  var identity = mkDiv('editor-block');
+  identity.innerHTML = '<h3>Identity</h3>';
+  identity.appendChild(labeledInput('Name', 'resume-name', c.name));
+  identity.appendChild(labeledInput('Bio line 1', 'resume-bio-0', c.bio[0] || ''));
+  identity.appendChild(labeledInput('Bio line 2', 'resume-bio-1', c.bio[1] || ''));
+  el.appendChild(identity);
 
-function buildResumeHTML(c) { var h=' \n\n'; h+=' \n'; h+=' '+esc(c.name)+'\n'; (c.bio||[]).forEach(function(b){ h+=' '+esc(b)+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Education\n'; (c.education||[]).forEach(function(e){ h+=' '+esc(e.years||e.year||'')+''+ ''+esc(e.detail||'')+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Selected Exhibitions\n'; (c.exhibitions||[]).forEach(function(e){ h+=' '+esc(e.year||'')+''+ ''+esc(e.detail||'')+'\n'; }); h+=' \n\n'; h+=' \n'; h+=' Contact\n'; h+=' Studio'+ ''+esc(c.studio||'').replace(/\n/g,'')+'\n'; h+=' Email'+ ''+esc(c.email||'')+'\n'; h+=' \n\n'; h+=' '; return h; }
+  el.appendChild(entryBlock('Education', 'education-entries', c.education, 'years'));
+  el.appendChild(entryBlock('Selected Exhibitions', 'exhibition-entries', c.exhibitions, 'year'));
 
-function replaceSection(html, startTag, endTag, newContent) { var s=html.indexOf(startTag), eIdx=html.indexOf(endTag); if(s===-1||eIdx===-1) throw new Error('Markers not found: '+startTag); var e=eIdx+endTag.length; return html.slice(0,s)+startTag+'\n'+newContent+'\n '+endTag+html.slice(e); }
+  var contact = mkDiv('editor-block');
+  contact.innerHTML = '<h3>Contact</h3>';
+  contact.appendChild(labeledTextarea('Studio address', 'resume-studio', c.studio, 3));
+  contact.appendChild(labeledInput('Email', 'resume-email', c.email));
+  el.appendChild(contact);
+}
 
-/* ───────────────────────────────────────── Publish ───────────────────────────────────────── */ var ghStatus = document.getElementById('gh-status'); var publishBtn = document.getElementById('publish-btn');
+function mkDiv(cls) {
+  var d = document.createElement('div');
+  d.className = cls;
+  return d;
+}
 
-function setStatus(type, msg){ ghStatus.className='gh-status '+type; ghStatus.textContent=msg; }
+function labeledInput(label, id, value) {
+  var w = mkDiv('editor-section');
+  w.innerHTML = '<h3>' + label + '</h3>' +
+                '<input type="text" id="' + id + '" value="' + attr(value) + '" />';
+  return w;
+}
 
-publishBtn.addEventListener('click', function() { var s=JSON.parse(localStorage.getItem('nh_gh_settings')||'{}'); var token=document.getElementById('gh-token').value.trim()||s.token; var owner=document.getElementById('gh-owner').value.trim()||s.owner; var repo =document.getElementById('gh-repo').value.trim() ||s.repo; if(!token||!owner||!repo){ setStatus('error','Fill in your GitHub token, owner and repository first.'); return; }
+function labeledTextarea(label, id, value, rows) {
+  var w = mkDiv('editor-section');
+  w.innerHTML = '<h3>' + label + '</h3>' +
+                '<textarea id="' + id + '" rows="' + rows + '">' + esc(value) + '</textarea>';
+  return w;
+}
 
-var paintings=collectPaintings(); var text =collectTextContent(); var resume =collectResumeContent(); save('nh_paintings', paintings); save('nh_text_content', text); save('nh_resume_content',resume);
+function entryBlock(title, listId, entries, yearField) {
+  var block = mkDiv('editor-block');
 
-var apiUrl ='https://api.github.com/repos/'+owner+'/'+repo+'/contents/index.html'; var headers={'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};
+  var h = document.createElement('h3');
+  h.textContent = title;
+  block.appendChild(h);
 
-publishBtn.disabled=true; publishBtn.textContent='Publishing…'; setStatus('loading','Fetching index.html…');
+  var list = mkDiv('entry-list');
+  list.id = listId;
+  block.appendChild(list);
 
-fetch(apiUrl,{headers:headers}) .then(function(r){ if(!r.ok) throw new Error('Fetch failed ('+r.status+')'); return r.json(); }) .then(function(data){ var sha=data.sha, content=frB64(data.content.replace(/\n/g,'')); content=replaceSection(content,'','', ' \n\n'+buildPaintingsHTML(paintings)+'\n\n '); content=replaceSection(content,'','',buildTextHTML(text)); content=replaceSection(content,'','',buildResumeHTML(resume)); setStatus('loading','Committing…'); return fetch(apiUrl,{method:'PUT',headers:headers,body:JSON.stringify({message:'Update content via admin',content:toB64(content),sha:sha})}); }) .then(function(r){ if(!r.ok) return r.json().then(function(d){throw new Error(d.message||'Commit failed');}); return r.json(); }) .then(function(){ setStatus('success','✓ Published! Site updates in ~1 minute.'); showToast('Published ✓'); }) .catch(function(err){ setStatus('error','✗ '+err.message); showToast('Error — see settings bar'); }) .finally(function(){ publishBtn.disabled=false; publishBtn.textContent='Publish to live site ↑'; }); });
+  entries.forEach(function (e) {
+    list.appendChild(entryRow(e, yearField));
+  });
 
-/* ───────────────────────────────────────── Logout + Toast ───────────────────────────────────────── */ document.getElementById('logout-btn').addEventListener('click', function() { sessionStorage.removeItem('nh_admin'); adminPanel.style.display='none'; loginScreen.style.display='flex'; pwInput.value=''; });
+  var addBtn = document.createElement('button');
+  addBtn.className = 'add-entry-btn';
+  addBtn.textContent = '+ Add entry';
+  addBtn.addEventListener('click', function () {
+    var ne = { id: Date.now() };
+    ne[yearField] = '';
+    ne.detail = '';
+    list.appendChild(entryRow(ne, yearField));
+  });
+  block.appendChild(addBtn);
 
-function showToast(msg) { var t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){t.classList.add('show');},10); setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},300);},3000); }
+  return block;
+}
+
+function entryRow(entry, yearField) {
+  var row = mkDiv('entry-row');
+  row.setAttribute('data-id', entry.id);
+
+  var yr = document.createElement('input');
+  yr.type = 'text';
+  yr.value = entry[yearField] || '';
+  yr.placeholder = (yearField === 'years') ? '2021 - 2022' : '2024';
+  yr.setAttribute('data-year-field', yearField);
+
+  var det = document.createElement('input');
+  det.type = 'text';
+  det.value = entry.detail || '';
+  det.placeholder = 'Detail';
+
+  var rm = document.createElement('button');
+  rm.className = 'btn-remove-entry';
+  rm.textContent = 'x';
+  rm.addEventListener('click', function () { row.remove(); });
+
+  row.appendChild(yr);
+  row.appendChild(det);
+  row.appendChild(rm);
+
+  return row;
+}
+
+function collectResumeContent() {
+  function entries(listId, yearField) {
+    var r = [];
+    document.querySelectorAll('#' + listId + ' .entry-row').forEach(function (row) {
+      var inputs = row.querySelectorAll('input');
+      var e = {
+        id: parseInt(row.getAttribute('data-id'), 10) || Date.now(),
+        detail: inputs[1] ? inputs[1].value : ''
+      };
+      e[yearField] = inputs[0] ? inputs[0].value : '';
+      r.push(e);
+    });
+    return r;
+  }
+
+  return {
+    name:        (document.getElementById('resume-name')   || {}).value || '',
+    bio:         [
+                   (document.getElementById('resume-bio-0') || {}).value || '',
+                   (document.getElementById('resume-bio-1') || {}).value || ''
+                 ],
+    education:   entries('education-entries', 'years'),
+    exhibitions: entries('exhibition-entries', 'year'),
+    studio:      (document.getElementById('resume-studio') || {}).value || '',
+    email:       (document.getElementById('resume-email')  || {}).value || ''
+  };
+}
+
+/* =========================================
+   Build HTML for publishing
+========================================= */
+function buildBannerHTML(b) {
+  var visible = (b && b.src && b.visible !== false) ? 'true' : 'false';
+  var h = '      <div class="banner" data-visible="' + visible + '">\n';
+
+  if (b && b.src) {
+    h += '        <img src="' + attr(b.src) + '" alt="" />\n';
+  }
+
+  if (b && (b.label || b.title)) {
+    h += '        <div class="banner-text">\n';
+    if (b.label) {
+      h += '          <span class="banner-label">' + esc(b.label) + '</span>\n';
+    }
+    if (b.title) {
+      h += '          <span class="banner-title">' + esc(b.title) + '</span>\n';
+    }
+    h += '        </div>\n';
+  }
+
+  h += '      </div>';
+  return h;
+}
+
+function buildPaintingsHTML(paintings) {
+  return paintings.map(function (p) {
+    return '        <div class="painting-item" data-id="' + p.id +
+           '" data-title="' + attr(p.title || '') +
+           '" data-year="' + attr(p.year || '') +
+           '" data-medium="' + attr(p.medium || '') +
+           '" data-description="' + attr(p.description || '') + '">\n' +
+           '          <img src="' + attr(p.src || '') + '" alt="" />\n' +
+           '        </div>';
+  }).join('\n');
+}
+
+function buildTextHTML(c) {
+  var out = [];
+
+  if (c.intro) {
+    out.push('        <p>' + esc(c.intro) + '</p>');
+  }
+  if (c.process) {
+    out.push('        <h2 data-i18n="text-heading-process">Process</h2>');
+    out.push('        <p>' + esc(c.process) + '</p>');
+  }
+  if (c.place) {
+    out.push('        <h2 data-i18n="text-heading-place">Place</h2>');
+    out.push('        <p>' + esc(c.place) + '</p>');
+  }
+  if (c.biography) {
+    out.push('        <h2 data-i18n="text-heading-biography">Biography</h2>');
+    out.push('        <p>' + esc(c.biography) + '</p>');
+  }
+
+  return out.join('\n');
+}
+
+function buildResumeHTML(c) {
+  var h = '      <div class="resume-inner">\n\n';
+
+  h += '        <div class="resume-identity">\n';
+  h += '          <p class="resume-name">' + esc(c.name) + '</p>\n';
+  (c.bio || []).forEach(function (b) {
+    h += '          <p class="resume-bio">' + esc(b) + '</p>\n';
+  });
+  h += '        </div>\n\n';
+
+  h += '        <div class="resume-block" data-section="education">\n';
+  h += '          <h2 class="resume-heading" data-i18n="resume-heading-education">Education</h2>\n';
+  (c.education || []).forEach(function (e) {
+    h += '          <div class="resume-entry">' +
+         '<span class="resume-year">' + esc(e.years || e.year || '') + '</span>' +
+         '<span class="resume-detail">' + esc(e.detail || '') + '</span>' +
+         '</div>\n';
+  });
+  h += '        </div>\n\n';
+
+  h += '        <div class="resume-block" data-section="exhibitions">\n';
+  h += '          <h2 class="resume-heading" data-i18n="resume-heading-exhibitions">Selected Exhibitions</h2>\n';
+  (c.exhibitions || []).forEach(function (e) {
+    h += '          <div class="resume-entry">' +
+         '<span class="resume-year">' + esc(e.year || '') + '</span>' +
+         '<span class="resume-detail">' + esc(e.detail || '') + '</span>' +
+         '</div>\n';
+  });
+  h += '        </div>\n\n';
+
+  h += '        <div class="resume-block" data-section="contact">\n';
+  h += '          <h2 class="resume-heading" data-i18n="resume-heading-contact">Contact</h2>\n';
+  h += '          <div class="resume-entry">' +
+       '<span class="resume-year" data-i18n="resume-studio-label">Studio</span>' +
+       '<span class="resume-detail">' + esc(c.studio || '').replace(/\n/g, '<br />') + '</span>' +
+       '</div>\n';
+  h += '          <div class="resume-entry">' +
+       '<span class="resume-year" data-i18n="resume-email-label">Email</span>' +
+       '<span class="resume-detail"><a href="mailto:' + attr(c.email || '') + '" class="resume-link">' + esc(c.email || '') + '</a></span>' +
+       '</div>\n';
+  h += '        </div>\n\n';
+
+  h += '      </div>';
+  return h;
+}
+
+function replaceSection(html, startTag, endTag, newContent) {
+  var s = html.indexOf(startTag);
+  var eIdx = html.indexOf(endTag);
+  if (s === -1 || eIdx === -1) throw new Error('Markers not found: ' + startTag);
+  var e = eIdx + endTag.length;
+  return html.slice(0, s) + startTag + '\n' + newContent + '\n      ' + endTag + html.slice(e);
+}
+
+/* =========================================
+   Publish
+========================================= */
+var ghStatus   = document.getElementById('gh-status');
+var publishBtn = document.getElementById('publish-btn');
+
+function setStatus(type, msg) {
+  ghStatus.className = 'gh-status ' + type;
+  ghStatus.textContent = msg;
+}
+
+publishBtn.addEventListener('click', function () {
+  var s = JSON.parse(localStorage.getItem('nh_gh_settings') || '{}');
+  var token = document.getElementById('gh-token').value.trim() || s.token;
+  var owner = document.getElementById('gh-owner').value.trim() || s.owner;
+  var repo  = document.getElementById('gh-repo').value.trim()  || s.repo;
+
+  if (!token || !owner || !repo) {
+    setStatus('error', 'Fill in your GitHub token, owner and repository first.');
+    return;
+  }
+
+  var paintings = collectPaintings();
+  var banner    = collectBanner();
+  var text      = collectTextContent();
+  var resume    = collectResumeContent();
+
+  save('nh_paintings',      paintings);
+  save('nh_banner',         banner);
+  save('nh_text_content',   text);
+  save('nh_resume_content', resume);
+
+  var apiUrl  = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/index.html';
+  var headers = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+
+  publishBtn.disabled = true;
+  publishBtn.textContent = 'Publishing...';
+  setStatus('loading', 'Fetching index.html...');
+
+  fetch(apiUrl, { headers: headers })
+    .then(function (r) {
+      if (!r.ok) throw new Error('Fetch failed (' + r.status + ')');
+      return r.json();
+    })
+    .then(function (data) {
+      var sha = data.sha;
+      var content = frB64(data.content.replace(/\n/g, ''));
+
+      content = replaceSection(
+        content,
+        '<!-- BANNER:START -->',
+        '<!-- BANNER:END -->',
+        buildBannerHTML(banner)
+      );
+
+      content = replaceSection(
+        content,
+        '<!-- PAINTINGS:START -->',
+        '<!-- PAINTINGS:END -->',
+        '      <div class="paintings-grid">\n\n' + buildPaintingsHTML(paintings) + '\n\n      </div>'
+      );
+
+      content = replaceSection(
+        content,
+        '<!-- TEXT:START -->',
+        '<!-- TEXT:END -->',
+        buildTextHTML(text)
+      );
+
+      content = replaceSection(
+        content,
+        '<!-- RESUME:START -->',
+        '<!-- RESUME:END -->',
+        buildResumeHTML(resume)
+      );
+
+      setStatus('loading', 'Committing...');
+
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify({
+          message: 'Update content via admin',
+          content: toB64(content),
+          sha: sha
+        })
+      });
+    })
+    .then(function (r) {
+      if (!r.ok) {
+        return r.json().then(function (d) {
+          throw new Error(d.message || 'Commit failed');
+        });
+      }
+      return r.json();
+    })
+    .then(function () {
+      setStatus('success', 'Published. Site updates in about a minute.');
+      showToast('Published');
+    })
+    .catch(function (err) {
+      setStatus('error', err.message);
+      showToast('Error - see settings bar');
+    })
+    .finally(function () {
+      publishBtn.disabled = false;
+      publishBtn.textContent = 'Publish to live site';
+    });
+});
+
+/* =========================================
+   Logout + Toast
+========================================= */
+document.getElementById('logout-btn').addEventListener('click', function () {
+  sessionStorage.removeItem('nh_admin');
+  adminPanel.style.display = 'none';
+  loginScreen.style.display = 'flex';
+  pwInput.value = '';
+});
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function () { t.classList.add('show'); }, 10);
+  setTimeout(function () {
+    t.classList.remove('show');
+    setTimeout(function () { t.remove(); }, 300);
+  }, 3000);
+}
 
 })();
-
